@@ -4,22 +4,34 @@ import Canteen from "../models/Canteen.js"
 // Create announcement
 export const createAnnouncement = async (req, res) => {
   try {
-    const { canteenId, title, description, type, startDate, endDate, priority } = req.body
+    const { canteen, canteenId, title, description, image, type, startDate, endDate, priority, isActive } = req.body
+    
+    // Support both 'canteen' and 'canteenId' field names
+    const targetCanteenId = canteen || canteenId
+
+    if (!targetCanteenId) {
+      return res.status(400).json({ success: false, message: "Canteen ID is required" })
+    }
 
     // Verify canteen ownership
-    const canteen = await Canteen.findById(canteenId)
-    if (canteen.owner.toString() !== req.user.id && req.user.role !== "admin") {
+    const canteenDoc = await Canteen.findById(targetCanteenId)
+    if (!canteenDoc) {
+      return res.status(404).json({ success: false, message: "Canteen not found" })
+    }
+    if (canteenDoc.owner.toString() !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({ success: false, message: "Not authorized" })
     }
 
     const announcement = await Announcement.create({
-      canteen: canteenId,
+      canteen: targetCanteenId,
       title,
       description,
+      image,
       type,
       startDate,
       endDate,
       priority,
+      isActive,
     })
 
     res.status(201).json({
@@ -28,6 +40,7 @@ export const createAnnouncement = async (req, res) => {
       announcement,
     })
   } catch (error) {
+    console.error('Create announcement error:', error);
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -37,10 +50,21 @@ export const getCanteenAnnouncements = async (req, res) => {
   try {
     const { canteenId } = req.params
 
-    const announcements = await Announcement.find({
-      canteen: canteenId,
-      isActive: true,
-    })
+    // If user is authenticated and is the owner, show all announcements
+    // Otherwise, only show active ones
+    const filter = { canteen: canteenId }
+    
+    // If not authenticated or not the owner, only show active announcements
+    if (!req.user) {
+      filter.isActive = true
+    } else if (req.user) {
+      const canteen = await Canteen.findById(canteenId)
+      if (canteen && canteen.owner.toString() !== req.user.id && req.user.role !== "admin") {
+        filter.isActive = true
+      }
+    }
+
+    const announcements = await Announcement.find(filter)
       .populate("canteen", "name")
       .sort({ priority: -1, createdAt: -1 })
 
@@ -114,11 +138,7 @@ export const deleteAnnouncement = async (req, res) => {
       return res.status(403).json({ success: false, message: "Not authorized to delete this announcement" })
     }
 
-    await announcement.remove()
-
-    if (!announcement) {
-      return res.status(404).json({ success: false, message: "Announcement not found" })
-    }
+    await Announcement.findByIdAndDelete(req.params.id)
 
     res.status(200).json({
       success: true,

@@ -8,14 +8,15 @@ export const connectDatabase = async () => {
     }
     
     const conn = await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000, // Increased to 30 seconds
-      socketTimeoutMS: 45000, // Increased socket timeout
-      connectTimeoutMS: 30000, // Connection timeout
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 30000,
       retryWrites: true,
       maxPoolSize: 10,
-      heartbeatFrequencyMS: 2000
+      heartbeatFrequencyMS: 2000,
+      tls: true,
+      tlsAllowInvalidCertificates: false,
+      tlsAllowInvalidHostnames: false,
     })
     
     console.log(`MongoDB Connected: ${conn.connection.host}`)
@@ -25,12 +26,7 @@ export const connectDatabase = async () => {
     })
     
     mongoose.connection.on('disconnected', () => {
-      console.log('MongoDB disconnected, attempting to reconnect...')
-      setTimeout(() => {
-        mongoose.connect(mongoUri).catch(err => {
-          console.error('Reconnection failed:', err)
-        })
-      }, 5000)
+      console.log('MongoDB disconnected')
     })
     
     return conn

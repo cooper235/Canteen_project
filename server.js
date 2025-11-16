@@ -4,6 +4,8 @@ import cors from "cors"
 import helmet from "helmet"
 import dotenv from "dotenv"
 import morgan from "morgan"
+import { createServer } from "http"
+import { Server } from "socket.io"
 
 import authRoutes from "./routes/authRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
@@ -13,21 +15,33 @@ import orderRoutes from "./routes/orderRoutes.js"
 import reviewRoutes from "./routes/reviewRoutes.js"
 import announcementRoutes from "./routes/announcementRoutes.js"
 import analyticsRoutes from "./routes/analyticsRoutes.js"
+import mlRoutes from "./routes/mlRoutes.js"
 import { authLimiter, apiLimiter, orderLimiter } from "./middleware/rateLimiter.js"
 
 dotenv.config()
 
 const app = express()
+const httpServer = createServer(app)
+
+// Initialize Socket.IO with CORS
+export const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+})
 
 // Middleware
-app.use(helmet())
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}))
 // Configure CORS to allow requests from the frontend
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: '*', // Allow all origins for development
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 )
 app.use(morgan("combined"))
@@ -66,14 +80,15 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "Server is running", timestamp: new Date() })
 })
 
-app.use("/api/auth", authLimiter, authRoutes)
-app.use("/api/users", apiLimiter, userRoutes)
-app.use("/api/canteens", apiLimiter, canteenRoutes)
-app.use("/api/dishes", apiLimiter, dishRoutes)
-app.use("/api/orders", orderLimiter, orderRoutes)
-app.use("/api/reviews", apiLimiter, reviewRoutes)
-app.use("/api/announcements", apiLimiter, announcementRoutes)
-app.use("/api/analytics", apiLimiter, analyticsRoutes)
+app.use("/api/auth", authRoutes)
+app.use("/api/users", userRoutes)
+app.use("/api/canteens", canteenRoutes)
+app.use("/api/dishes", dishRoutes)
+app.use("/api/orders", orderRoutes)
+app.use("/api/reviews", reviewRoutes)
+app.use("/api/announcements", announcementRoutes)
+app.use("/api/analytics", analyticsRoutes)
+app.use("/api/ml", mlRoutes)
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
@@ -91,6 +106,29 @@ app.use((req, res) => {
 })
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
+
+// Socket.IO connection handling
+io.on("connection", (socket) => {
+  console.log(`Client connected: ${socket.id}`)
+
+  // Join room for user-specific notifications
+  socket.on("join", (userId) => {
+    socket.join(`user:${userId}`)
+    console.log(`User ${userId} joined their room`)
+  })
+
+  // Join room for canteen-specific notifications
+  socket.on("joinCanteen", (canteenId) => {
+    socket.join(`canteen:${canteenId}`)
+    console.log(`Socket ${socket.id} joined canteen ${canteenId} room`)
+  })
+
+  socket.on("disconnect", () => {
+    console.log(`Client disconnected: ${socket.id}`)
+  })
+})
+
+httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
+  console.log(`Socket.IO initialized and ready for connections`)
 })

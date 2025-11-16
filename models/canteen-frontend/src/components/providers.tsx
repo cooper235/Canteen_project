@@ -3,6 +3,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
+import { CartProvider } from "@/contexts/CartContext";
+import { ToastProvider } from "@/contexts/ToastContext";
+import { SocketProvider } from "@/contexts/SocketContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -14,11 +17,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
             retry: 1,
             refetchOnWindowFocus: false,
           },
-          mutations: {
-            onError: (error: Error) => {
-              console.error('Mutation error:', error);
-            },
-          },
         },
       })
   );
@@ -26,7 +24,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <ToastProvider>
+          <SocketProvider>
+            <CartProvider>
+              {children}
+            </CartProvider>
+          </SocketProvider>
+        </ToastProvider>
       </QueryClientProvider>
     </SessionProvider>
   );

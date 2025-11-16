@@ -7,6 +7,7 @@ declare module 'next-auth' {
       id: string;
       role: string;
       token: string;
+      canteenId?: string;
     } & DefaultSession['user'];
   }
 
@@ -14,12 +15,15 @@ declare module 'next-auth' {
     id: string;
     role: string;
     token: string;
+    canteenId?: string;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
+    id: string;
     role: string;
     token: string;
+    canteenId?: string;
   }
 }

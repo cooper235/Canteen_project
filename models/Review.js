@@ -55,6 +55,22 @@ const reviewSchema = new mongoose.Schema(
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
+    // ML-powered sentiment analysis fields
+    sentiment: {
+      type: String,
+      enum: ["positive", "neutral", "negative"],
+      default: "neutral",
+    },
+    sentimentScore: {
+      type: Number,
+      default: 0,
+      min: -1,
+      max: 1,
+    },
+    sentimentKeywords: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true },
 )

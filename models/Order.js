@@ -5,7 +5,6 @@ const orderSchema = new mongoose.Schema(
     orderNumber: {
       type: String,
       unique: true,
-      required: true,
     },
     student: {
       type: mongoose.Schema.Types.ObjectId,

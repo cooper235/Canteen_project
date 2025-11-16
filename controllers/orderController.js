@@ -1,6 +1,7 @@
 import Order from "../models/Order.js"
 import Dish from "../models/Dish.js"
 import Canteen from "../models/Canteen.js"
+import { io } from "../server.js"
 
 // Create order
 export const createOrder = async (req, res) => {
@@ -48,7 +49,18 @@ export const createOrder = async (req, res) => {
       specialRequests,
     })
 
-    await order.populate("student", "name email phone").populate("canteen", "name").populate("items.dish", "name price")
+    await order.populate([
+      { path: 'student', select: 'name email phone' },
+      { path: 'canteen', select: 'name' },
+      { path: 'items.dish', select: 'name price' }
+    ])
+
+    // Emit socket event to canteen owner
+    console.log(`[Socket] Emitting order:created to canteen:${canteenId}`);
+    io.to(`canteen:${canteenId}`).emit("order:created", {
+      order,
+      message: `New order #${order.orderNumber} received`
+    })
 
     res.status(201).json({
       success: true,
@@ -178,6 +190,23 @@ export const updateOrderStatus = async (req, res) => {
       .populate("student", "name email phone")
       .populate("canteen", "name")
       .populate("items.dish", "name price")
+
+    // Emit socket event to student
+    console.log(`[Socket] Emitting order:statusChanged to user:${order.student._id}`);
+    io.to(`user:${order.student._id}`).emit("order:statusChanged", {
+      orderId: order._id,
+      orderNumber: order.orderNumber,
+      status: order.status,
+      message: `Your order #${order.orderNumber} status updated to ${status}`
+    })
+
+    // Emit socket event to canteen (for owner's own dashboard)
+    console.log(`[Socket] Emitting order:statusChanged to canteen:${order.canteen._id}`);
+    io.to(`canteen:${order.canteen._id}`).emit("order:statusChanged", {
+      orderId: order._id,
+      orderNumber: order.orderNumber,
+      status: order.status
+    })
 
     res.status(200).json({
       success: true,

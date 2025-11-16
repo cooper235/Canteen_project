@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import Order from "../models/Order.js"
 import Canteen from "../models/Canteen.js"
 import Dish from "../models/Dish.js"
@@ -12,11 +13,17 @@ export const getCanteenAnalytics = async (req, res) => {
 
     // Verify ownership
     const canteen = await Canteen.findById(canteenId)
+    if (!canteen) {
+      return res.status(404).json({ success: false, message: "Canteen not found" })
+    }
     if (canteen.owner.toString() !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({ success: false, message: "Not authorized" })
     }
 
-    const filter = { canteen: canteenId }
+    // Convert canteenId to ObjectId for aggregation
+    const canteenObjectId = new mongoose.Types.ObjectId(canteenId)
+    
+    const filter = { canteen: canteenObjectId }
     if (startDate || endDate) {
       filter.createdAt = {}
       if (startDate) filter.createdAt.$gte = new Date(startDate)

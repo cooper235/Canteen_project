@@ -2,6 +2,9 @@ import Review from "../models/Review.js"
 import Canteen from "../models/Canteen.js"
 import Dish from "../models/Dish.js"
 import Order from "../models/Order.js"
+import axios from 'axios'
+
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001'
 
 // Create review
 export const createReview = async (req, res) => {
@@ -22,6 +25,23 @@ export const createReview = async (req, res) => {
       }
     }
 
+    // Analyze sentiment using ML service
+    let sentimentData = null
+    if (comment) {
+      try {
+        const sentimentResponse = await axios.post(
+          `${ML_SERVICE_URL}/api/sentiment/analyze`,
+          { text: comment },
+          { timeout: 5000 }
+        )
+        if (sentimentResponse.data.success) {
+          sentimentData = sentimentResponse.data.sentiment
+        }
+      } catch (error) {
+        console.warn('Sentiment analysis failed, continuing without it:', error.message)
+      }
+    }
+
     const review = await Review.create({
       reviewer: req.user.id,
       canteen: canteenId || null,
@@ -31,6 +51,10 @@ export const createReview = async (req, res) => {
       title,
       comment,
       isVerifiedPurchase,
+      status: 'approved', // Auto-approve all reviews for now
+      sentiment: sentimentData ? sentimentData.sentiment : 'neutral',
+      sentimentScore: sentimentData ? sentimentData.score : 0,
+      sentimentKeywords: sentimentData ? sentimentData.keywords : [],
     })
 
     // Update ratings in canteen/dish

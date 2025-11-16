@@ -2,8 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import api from '@/lib/api';
-import { useEffect } from 'react';
+import RecommendationsSection from '@/components/RecommendationsSection';
 
 type Canteen = {
   _id: string;
@@ -25,19 +24,42 @@ export default function CanteensPage() {
   const { data, isLoading, error } = useQuery<{ success: boolean; canteens: Canteen[] }>({
     queryKey: ['canteens'],
     queryFn: async () => {
+      console.log('🔄 Fetching canteens...');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+      
       try {
-        console.log('Fetching canteens...');
-        const response = await api.get('/canteens');
-        console.log('API Response:', response.data);
-        return response.data;
-      } catch (err) {
-        console.error('Error fetching canteens:', err);
-        throw err;
+        const response = await fetch('http://localhost:5000/api/canteens', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal,
+        });
+        
+        clearTimeout(timeoutId);
+        console.log('✅ Response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch canteens');
+        }
+        
+        const json = await response.json();
+        console.log('✅ Data received:', json);
+        return json;
+      } catch (error) {
+        clearTimeout(timeoutId);
+        console.error('❌ Fetch error:', error);
+        throw error;
       }
     },
+    retry: 1,
+    staleTime: 30000,
   });
 
   const canteens = data?.canteens;
+
+  console.log('📊 Query state:', { isLoading, hasError: !!error, dataCount: canteens?.length });
 
   if (isLoading) {
     return (
@@ -81,6 +103,11 @@ export default function CanteensPage() {
           <p className="mt-3 text-xl text-gray-500 sm:mt-4">
             Discover and order from various canteens around the campus
           </p>
+        </div>
+
+        {/* AI-Powered Recommendations Section */}
+        <div className="mt-8">
+          <RecommendationsSection />
         </div>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">

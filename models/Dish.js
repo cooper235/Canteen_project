@@ -81,6 +81,21 @@ const dishSchema = new mongoose.Schema(
       },
     },
     tags: [String],
+    offer: {
+      isActive: {
+        type: Boolean,
+        default: false,
+      },
+      type: {
+        type: String,
+        enum: ['discount', 'combo', 'free_delivery', 'buy_one_get_one'],
+      },
+      title: String,
+      description: String,
+      discountPercentage: Number,
+      originalPrice: Number,
+      validUntil: Date,
+    },
   },
   { timestamps: true },
 )

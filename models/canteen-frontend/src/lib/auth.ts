@@ -1,6 +1,5 @@
 import { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import api from './api';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -12,23 +11,31 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const response = await api.post('/auth/login', {
-            email: credentials?.email,
-            password: credentials?.password,
+          const response = await fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: credentials?.email,
+              password: credentials?.password,
+            }),
           });
 
-          const user = response.data.user;
-          // Store the token in localStorage on successful login
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('token', response.data.token);
+          if (!response.ok) {
+            return null;
           }
 
+          const data = await response.json();
+          const user = data.user;
+
           return {
-            id: user._id,
+            id: user.id || user._id,
             name: user.name,
             email: user.email,
             role: user.role,
-            token: response.data.token,
+            token: data.token,
+            canteenId: user.canteenId,
           };
         } catch (error) {
           return null;
@@ -39,15 +46,19 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        token.id = user.id;
         token.role = user.role;
         token.token = user.token;
+        token.canteenId = user.canteenId;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
+        (session.user as any).id = token.id;
         (session.user as any).role = token.role;
         (session.user as any).token = token.token;
+        (session.user as any).canteenId = token.canteenId;
       }
       return session;
     }

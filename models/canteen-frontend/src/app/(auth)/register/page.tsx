@@ -4,14 +4,13 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import api from '@/lib/api';
 
 type RegisterFormData = {
   name: string;
   email: string;
   password: string;
   role: 'student' | 'canteen_owner';
-  phone?: string;
+  phone: string;
 };
 
 export default function RegisterPage() {
@@ -25,12 +24,31 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      const response = await api.post('/auth/register', data);
-      if (response.data) {
-        router.push('/login');
+      setError('');
+      
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      const responseData = await response.json();
+      
+      if (response.ok && responseData.success) {
+        // Store token if provided
+        if (responseData.token) {
+          localStorage.setItem('token', responseData.token);
+        }
+        // Redirect to login
+        router.push('/login?registered=true');
+      } else {
+        setError(responseData.message || 'Registration failed');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      const errorMessage = err.message || 'Network error. Please check if the server is running.';
+      setError(errorMessage);
     }
   };
 
@@ -53,7 +71,7 @@ export default function RegisterPage() {
               type="text"
               autoComplete="name"
               required
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900 bg-white"
               {...register('name', {
                 required: 'Name is required',
                 minLength: {
@@ -78,7 +96,7 @@ export default function RegisterPage() {
               type="email"
               autoComplete="email"
               required
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900 bg-white"
               {...register('email', {
                 required: 'Email is required',
                 pattern: {
@@ -103,7 +121,7 @@ export default function RegisterPage() {
               type="password"
               autoComplete="new-password"
               required
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900 bg-white"
               {...register('password', {
                 required: 'Password is required',
                 minLength: {
@@ -120,18 +138,24 @@ export default function RegisterPage() {
 
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-            Phone Number (Optional)
+            Phone Number
           </label>
           <div className="mt-1">
             <input
               id="phone"
               type="tel"
               autoComplete="tel"
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
+              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900 bg-white"
               {...register('phone', {
+                required: 'Phone number is required',
                 pattern: {
-                  value: /^(\+\d{1,3}[- ]?)?\d{10}$/,
-                  message: 'Please enter a valid phone number (10 digits, optionally with country code)',
+                  value: /^\d{10,}$/,
+                  message: 'Please enter a valid phone number (minimum 10 digits)',
+                },
+                minLength: {
+                  value: 10,
+                  message: 'Phone number must be at least 10 digits',
                 },
               })}
             />
@@ -148,7 +172,7 @@ export default function RegisterPage() {
           <div className="mt-1">
             <select
               id="role"
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-gray-900 bg-white"
               {...register('role', { required: 'Role is required' })}
             >
               <option value="student">Student</option>

@@ -1,5 +1,6 @@
 import User from "../models/User.js"
 import jwt from "jsonwebtoken"
+import Canteen from "../models/Canteen.js"
 
 // Generate JWT Token
 const generateToken = (id, role) => {
@@ -75,6 +76,15 @@ export const login = async (req, res) => {
 
     const token = generateToken(user._id, user.role)
 
+    // If user is a canteen owner, get their canteen ID
+    let canteenId = null;
+    if (user.role === 'canteen_owner') {
+      const canteen = await Canteen.findOne({ owner: user._id });
+      if (canteen) {
+        canteenId = canteen._id.toString();
+      }
+    }
+
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -84,6 +94,7 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        canteenId,
       },
     })
   } catch (error) {
