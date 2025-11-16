@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useToast } from '@/contexts/ToastContext';
+import { motion } from 'framer-motion';
+import { themeClasses, animations } from '@/lib/theme';
 
 interface Dish {
   _id: string;
@@ -175,10 +177,10 @@ export default function ManageMenuPage() {
 
   if (status === 'loading' || canteenLoading) {
     return (
-      <div className="min-h-screen py-12 bg-gray-50 flex items-center justify-center">
+      <div className={`min-h-screen py-12 flex items-center justify-center ${themeClasses.background}`}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading menu...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className={`mt-4 ${themeClasses.textSecondary}`}>Loading menu...</p>
         </div>
       </div>
     );
@@ -191,13 +193,13 @@ export default function ManageMenuPage() {
 
   if (!canteen) {
     return (
-      <div className="min-h-screen py-12 bg-gray-50 flex items-center justify-center">
+      <div className={`min-h-screen py-12 flex items-center justify-center ${themeClasses.background}`}>
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">No Canteen Found</h1>
-          <p className="mt-4 text-gray-500">Please create a canteen first</p>
+          <h1 className={`text-3xl font-black ${themeClasses.textPrimary}`}>No Canteen Found</h1>
+          <p className={`mt-4 ${themeClasses.textSecondary}`}>Please create a canteen first</p>
           <button
             onClick={() => router.push('/manage/canteen')}
-            className="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700"
+            className={`mt-6 ${themeClasses.buttonPrimary} px-6 py-3 rounded-lg`}
           >
             Create Canteen
           </button>
@@ -258,34 +260,42 @@ export default function ManageMenuPage() {
   };
 
   return (
-    <div className="min-h-screen py-8 bg-gray-50">
+    <div className={`min-h-screen py-8 ${themeClasses.background}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <motion.div
+          className="mb-8 flex items-center justify-between"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Manage Menu</h1>
-            <p className="mt-2 text-gray-600">{canteen.name}</p>
+            <h1 className={`text-3xl font-black ${themeClasses.textPrimary}`}>Manage Menu</h1>
+            <p className={`mt-2 ${themeClasses.textSecondary}`}>{canteen.name}</p>
           </div>
           {!isAddingDish && (
             <button
               onClick={() => setIsAddingDish(true)}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition-colors font-semibold flex items-center gap-2"
+              className={`${themeClasses.buttonPrimary} px-6 py-3 rounded-lg transition-colors font-semibold flex items-center gap-2`}
             >
               <span className="text-xl">+</span> Add New Dish
             </button>
           )}
-        </div>
+        </motion.div>
 
         {/* Add/Edit Form */}
         {isAddingDish && (
-          <div className="bg-white shadow rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+          <motion.div
+            className={`${themeClasses.card} p-6 mb-8`}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <h2 className={`text-xl font-bold ${themeClasses.textPrimary} mb-6`}>
               {editingDish ? 'Edit Dish' : 'Add New Dish'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
                     Dish Name *
                   </label>
                   <input
@@ -293,20 +303,20 @@ export default function ManageMenuPage() {
                     required
                     value={formData.name || ''}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                    className={`w-full px-4 py-2 rounded-lg ${themeClasses.border} border bg-slate-800/50 backdrop-blur ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                     placeholder="e.g., Chicken Biryani"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
                     Category *
                   </label>
                   <select
                     required
                     value={formData.category || ''}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                    className={`w-full px-4 py-2 rounded-lg ${themeClasses.border} border bg-slate-800/50 backdrop-blur ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                   >
                     <option value="">Select category</option>
                     <option value="breakfast">Breakfast</option>
@@ -320,7 +330,7 @@ export default function ManageMenuPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
                   Description *
                 </label>
                 <textarea
@@ -328,13 +338,13 @@ export default function ManageMenuPage() {
                   rows={3}
                   value={formData.description || ''}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-4 py-2 rounded-lg ${themeClasses.border} border bg-slate-800/50 backdrop-blur ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                   placeholder="Describe the dish..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
                   Price (₹) *
                 </label>
                 <input
@@ -344,27 +354,27 @@ export default function ManageMenuPage() {
                   step="0.01"
                   value={formData.price || ''}
                   onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-4 py-2 rounded-lg ${themeClasses.border} border bg-slate-800/50 backdrop-blur ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                   placeholder="0.00"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
                   Image URL
                 </label>
                 <input
                   type="url"
                   value={formData.image || ''}
                   onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  className={`w-full px-4 py-2 rounded-lg ${themeClasses.border} border bg-slate-800/50 backdrop-blur ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                   placeholder="https://example.com/image.jpg"
                 />
-                <p className="mt-1 text-xs text-gray-500">Enter the URL of the dish image</p>
+                <p className={`mt-1 text-xs ${themeClasses.textMuted}`}>Enter the URL of the dish image</p>
               </div>
 
               <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className={`block text-sm font-medium ${themeClasses.textSecondary}`}>
                   Dish Properties
                 </label>
                 <div className="flex flex-wrap gap-4">
@@ -373,36 +383,36 @@ export default function ManageMenuPage() {
                       type="checkbox"
                       checked={formData.isVegetarian || false}
                       onChange={(e) => setFormData({ ...formData, isVegetarian: e.target.checked })}
-                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      className="w-4 h-4 text-blue-600 border-slate-600 rounded focus:ring-blue-500 bg-slate-800"
                     />
-                    <span className="text-sm text-gray-700">🥬 Vegetarian</span>
+                    <span className={`text-sm ${themeClasses.textSecondary}`}>🥬 Vegetarian</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.isVegan || false}
                       onChange={(e) => setFormData({ ...formData, isVegan: e.target.checked })}
-                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      className="w-4 h-4 text-blue-600 border-slate-600 rounded focus:ring-blue-500 bg-slate-800"
                     />
-                    <span className="text-sm text-gray-700">🌱 Vegan</span>
+                    <span className={`text-sm ${themeClasses.textSecondary}`}>🌱 Vegan</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.isSpicy || false}
                       onChange={(e) => setFormData({ ...formData, isSpicy: e.target.checked })}
-                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      className="w-4 h-4 text-blue-600 border-slate-600 rounded focus:ring-blue-500 bg-slate-800"
                     />
-                    <span className="text-sm text-gray-700">🌶️ Spicy</span>
+                    <span className={`text-sm ${themeClasses.textSecondary}`}>🌶️ Spicy</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.availability !== false}
                       onChange={(e) => setFormData({ ...formData, availability: e.target.checked })}
-                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      className="w-4 h-4 text-blue-600 border-slate-600 rounded focus:ring-blue-500 bg-slate-800"
                     />
-                    <span className="text-sm text-gray-700">✓ Available</span>
+                    <span className={`text-sm ${themeClasses.textSecondary}`}>✓ Available</span>
                   </label>
                 </div>
               </div>
@@ -422,7 +432,7 @@ export default function ManageMenuPage() {
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-md hover:bg-gray-300 transition-colors font-semibold"
+                  className={`flex-1 ${themeClasses.card} ${themeClasses.textPrimary} px-6 py-3 rounded-md hover:bg-slate-600/50 transition-colors font-semibold border border-slate-600/50`}
                 >
                   Cancel
                 </button>
@@ -439,8 +449,8 @@ export default function ManageMenuPage() {
               onClick={() => setFilterCategory(category.key)}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 filterCategory === category.key
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                  ? `${themeClasses.buttonPrimary}`
+                  : `${themeClasses.card} ${themeClasses.textSecondary} hover:bg-slate-600/50 border border-slate-600/50`
               }`}
             >
               {category.icon} {category.label}
@@ -456,20 +466,20 @@ export default function ManageMenuPage() {
         {/* Dishes Grid */}
         {dishesLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading dishes...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className={`mt-4 ${themeClasses.textSecondary}`}>Loading dishes...</p>
           </div>
         ) : filteredDishes.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className={`${themeClasses.card} rounded-lg shadow p-12 text-center border border-slate-600/50`}>
+            <svg className="mx-auto h-12 w-12 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            <p className="mt-4 text-gray-500 text-lg">
+            <p className={`mt-4 ${themeClasses.textMuted} text-lg`}>
               {filterCategory === 'all' ? 'No dishes yet' : `No ${filterCategory} dishes`}
             </p>
             <button
               onClick={() => setIsAddingDish(true)}
-              className="mt-4 inline-block bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700"
+              className={`mt-4 inline-block ${themeClasses.buttonPrimary} px-6 py-2 rounded-md hover:opacity-90`}
             >
               Add Your First Dish
             </button>
@@ -477,12 +487,14 @@ export default function ManageMenuPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredDishes.map((dish) => (
-              <div
+              <motion.div
                 key={dish._id}
-                className="bg-white rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`${themeClasses.card} rounded-lg shadow-lg hover:shadow-xl transition-shadow overflow-hidden border border-slate-600/50`}
               >
                 {/* Dish Image */}
-                <div className="h-48 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+                <div className="h-48 bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
                   {dish.image ? (
                     <img src={dish.image} alt={dish.name} className="w-full h-full object-cover" />
                   ) : (
@@ -493,43 +505,43 @@ export default function ManageMenuPage() {
                 {/* Dish Info */}
                 <div className="p-5">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-bold text-gray-900">{dish.name}</h3>
-                    <span className="text-lg font-bold text-indigo-600">₹{dish.price}</span>
+                    <h3 className={`text-lg font-bold ${themeClasses.textPrimary}`}>{dish.name}</h3>
+                    <span className="text-lg font-bold text-blue-400">₹{dish.price}</span>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">{dish.description}</p>
+                  <p className={`text-sm ${themeClasses.textSecondary} mb-3 line-clamp-2`}>{dish.description}</p>
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2 mb-3">
-                    <span className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded-full capitalize">
+                    <span className={`text-xs px-2 py-1 ${themeClasses.card} text-blue-300 rounded-full capitalize border border-slate-600/50`}>
                       {dish.category}
                     </span>
                     {dish.isVegetarian && (
-                      <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                      <span className="text-xs px-2 py-1 bg-green-900/30 text-green-300 rounded-full border border-green-700/50">
                         🥬 Veg
                       </span>
                     )}
                     {dish.isVegan && (
-                      <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                      <span className="text-xs px-2 py-1 bg-green-900/30 text-green-300 rounded-full border border-green-700/50">
                         🌱 Vegan
                       </span>
                     )}
                     {dish.isSpicy && (
-                      <span className="text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full">
+                      <span className="text-xs px-2 py-1 bg-red-900/30 text-red-300 rounded-full border border-red-700/50">
                         🌶️ Spicy
                       </span>
                     )}
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                  <div className={`flex items-center gap-4 mb-4 text-sm ${themeClasses.textSecondary}`}>
                     <span>⭐ {dish.ratings.averageRating.toFixed(1)}</span>
                     <span>📦 {dish.popularity.orderCount} orders</span>
                   </div>
 
                   {/* Availability Toggle */}
-                  <div className="flex items-center justify-between mb-4 pb-4 border-b">
-                    <span className="text-sm font-medium text-gray-700">Available</span>
+                  <div className={`flex items-center justify-between mb-4 pb-4 border-b border-slate-600/50`}>
+                    <span className={`text-sm font-medium ${themeClasses.textSecondary}`}>Available</span>
                     <button
                       onClick={() =>
                         toggleAvailabilityMutation.mutate({
@@ -538,7 +550,7 @@ export default function ManageMenuPage() {
                         })
                       }
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        dish.availability ? 'bg-green-600' : 'bg-gray-300'
+                        dish.availability ? 'bg-green-600' : 'bg-slate-600'
                       }`}
                     >
                       <span
@@ -553,19 +565,19 @@ export default function ManageMenuPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(dish)}
-                      className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors text-sm font-medium"
+                      className={`flex-1 ${themeClasses.buttonPrimary} text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity text-sm font-medium`}
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(dish._id, dish.name)}
-                      className="flex-1 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+                      className="flex-1 bg-red-600/80 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
                     >
                       Delete
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}

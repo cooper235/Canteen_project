@@ -59,7 +59,6 @@ export default function CheckoutPage() {
     );
   }
 
-  // Group items by canteen (assuming all items are from same canteen)
   const canteenId = items[0]?.canteenId;
   const canteenName = items[0]?.canteenName;
 
@@ -105,7 +104,6 @@ export default function CheckoutPage() {
       }
 
       console.log('✅ Order placed successfully!');
-      // Clear cart and redirect to order confirmation
       clearCart();
       router.push(`/orders/${data.order._id}`);
     } catch (err: any) {
@@ -122,12 +120,10 @@ export default function CheckoutPage() {
         <h1 className={`text-3xl font-bold ${themeClasses.textPrimary} mb-8`}>Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Order Form */}
           <div className="lg:col-span-2">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Order Items */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className={`${themeClasses.cardDark} rounded-lg p-6`}>
+                <h2 className={`text-xl font-semibold ${themeClasses.textPrimary} mb-4`}>
                   Order from {canteenName}
                 </h2>
                 <div className="space-y-3">
@@ -157,14 +153,13 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Payment Method */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className={`${themeClasses.cardDark} rounded-lg p-6`}>
+                <h2 className={`text-xl font-semibold ${themeClasses.textPrimary} mb-4`}>
                   Payment Method
                 </h2>
                 <div className="space-y-2">
                   {['cash', 'card', 'upi', 'wallet'].map((method) => (
-                    <label key={method} className="flex items-center">
+                    <label key={method} className={`flex items-center cursor-pointer`}>
                       <input
                         type="radio"
                         name="paymentMethod"
@@ -173,22 +168,21 @@ export default function CheckoutPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, paymentMethod: e.target.value })
                         }
-                        className="mr-2"
+                        className="mr-2 accent-orange-600"
                       />
-                      <span className="capitalize">{method}</span>
+                      <span className={`capitalize ${themeClasses.textSecondary}`}>{method}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {/* Delivery Type */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className={`${themeClasses.cardDark} rounded-lg p-6`}>
+                <h2 className={`text-xl font-semibold ${themeClasses.textPrimary} mb-4`}>
                   Delivery Type
                 </h2>
                 <div className="space-y-2">
                   {['pickup', 'delivery'].map((type) => (
-                    <label key={type} className="flex items-center">
+                    <label key={type} className={`flex items-center cursor-pointer`}>
                       <input
                         type="radio"
                         name="deliveryType"
@@ -197,17 +191,16 @@ export default function CheckoutPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, deliveryType: e.target.value })
                         }
-                        className="mr-2"
+                        className="mr-2 accent-orange-600"
                       />
-                      <span className="capitalize">{type}</span>
+                      <span className={`capitalize ${themeClasses.textSecondary}`}>{type}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {/* Special Requests */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className={`${themeClasses.cardDark} rounded-lg p-6`}>
+                <h2 className={`text-xl font-semibold ${themeClasses.textPrimary} mb-4`}>
                   Special Requests
                 </h2>
                 <textarea
@@ -216,7 +209,7 @@ export default function CheckoutPage() {
                     setFormData({ ...formData, specialRequests: e.target.value })
                   }
                   rows={3}
-                  className={`w-full border rounded-md p-2 ${themeClasses.border} bg-slate-700/50 ${themeClasses.textPrimary} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full border rounded-md p-2 ${themeClasses.border} bg-slate-700/50 ${themeClasses.textPrimary} focus:outline-none focus:ring-2 focus:ring-orange-500`}
                   placeholder="Any special instructions for your order..."
                 />
               </div>
@@ -229,7 +222,6 @@ export default function CheckoutPage() {
             </form>
           </div>
 
-          {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className={`${themeClasses.cardDark} rounded-lg p-6 sticky top-4`}>
               <h2 className={`text-xl font-bold ${themeClasses.textPrimary} mb-4`}>
@@ -254,13 +246,13 @@ export default function CheckoutPage() {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-orange-600 to-amber-500 text-white py-3 px-4 rounded-md hover:from-orange-700 hover:to-amber-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                className="w-full bg-gradient-to-r from-orange-600 to-amber-500 text-white py-3 px-4 rounded-md hover:from-orange-700 hover:to-amber-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Placing Order...' : 'Place Order'}
               </button>
               <Link
                 href="/cart"
-                className={`block text-center mt-4 text-blue-400 hover:text-blue-300 text-sm`}
+                className={`block text-center mt-4 text-orange-400 hover:text-orange-300 text-sm`}
               >
                 Back to Cart
               </Link>

@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { themeClasses, animations } from '@/lib/theme';
 
 interface Announcement {
   _id: string;
@@ -68,12 +70,12 @@ export default function AnnouncementsPage() {
   ];
 
   return (
-    <div className="min-h-screen py-8 bg-gray-50">
+    <div className={`min-h-screen py-8 ${themeClasses.background}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">📢 All Announcements</h1>
-          <p className="mt-2 text-gray-600">Stay updated with the latest news, offers, and updates from all canteens</p>
+          <h1 className={`text-3xl font-bold ${themeClasses.textPrimary}`}>📢 All Announcements</h1>
+          <p className={`mt-2 ${themeClasses.textSecondary}`}>Stay updated with the latest news, offers, and updates from all canteens</p>
         </div>
 
         {/* Filter Tabs */}
@@ -84,8 +86,8 @@ export default function AnnouncementsPage() {
               onClick={() => setFilterType(type.key)}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 filterType === type.key
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                  ? 'bg-gradient-to-r from-orange-600 to-amber-500 text-white'
+                  : `${themeClasses.cardDark} ${themeClasses.textSecondary} hover:border-orange-500`
               }`}
             >
               {type.icon} {type.label}
@@ -101,33 +103,42 @@ export default function AnnouncementsPage() {
         {/* Announcements Grid */}
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading announcements...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+            <p className={`mt-4 ${themeClasses.textSecondary}`}>Loading announcements...</p>
           </div>
         ) : filteredAnnouncements.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className={`${themeClasses.cardDark} rounded-lg p-12 text-center`}>
+            <svg className={`mx-auto h-12 w-12 ${themeClasses.textMuted}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
             </svg>
-            <p className="mt-4 text-gray-500 text-lg">
+            <p className={`mt-4 ${themeClasses.textTertiary} text-lg`}>
               {filterType === 'all' ? 'No announcements yet' : `No ${filterType.replace('_', ' ')} announcements`}
             </p>
             <Link
               href="/canteens"
-              className="mt-4 inline-block bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700"
+              className="mt-4 inline-block bg-gradient-to-r from-orange-600 to-amber-500 text-white px-6 py-2 rounded-md hover:from-orange-700 hover:to-amber-600"
             >
               Browse Canteens
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={animations.containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {filteredAnnouncements.map((announcement) => (
-              <Link
-                key={announcement._id}
-                href={`/canteens/${announcement.canteen._id}`}
-                className="block group"
-              >
-                <div className={`bg-white rounded-lg shadow hover:shadow-lg transition-all overflow-hidden border-l-4 ${getPriorityColor(announcement.priority)} h-full`}>
+              <motion.div key={announcement._id} variants={animations.itemVariants}>
+                <Link
+                  href={`/canteens/${announcement.canteen._id}`}
+                  className="block group h-full"
+                >
+                  <div className={`${themeClasses.card} border-l-4 h-full overflow-hidden ${
+                    announcement.priority === 'high' ? 'border-l-red-500 shadow-lg shadow-red-500/20' :
+                    announcement.priority === 'medium' ? 'border-l-yellow-500 shadow-lg shadow-yellow-500/20' :
+                    'border-l-green-500 shadow-lg shadow-green-500/20'
+                  }`}>
                   {announcement.image && (
                     <div className="h-48 overflow-hidden">
                       <img
@@ -144,24 +155,24 @@ export default function AnnouncementsPage() {
                         {announcement.type.replace('_', ' ')}
                       </span>
                       <span className={`ml-auto px-2 py-1 rounded text-xs font-semibold ${
-                        announcement.priority === 'high' ? 'bg-red-100 text-red-800' :
-                        announcement.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-green-100 text-green-800'
+                        announcement.priority === 'high' ? 'bg-red-900/30 text-red-300' :
+                        announcement.priority === 'medium' ? 'bg-yellow-900/30 text-yellow-300' :
+                        'bg-green-900/30 text-green-300'
                       }`}>
                         {announcement.priority.toUpperCase()}
                       </span>
                     </div>
                     
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                    <h3 className={`text-lg font-bold ${themeClasses.textPrimary} mb-2 group-hover:text-blue-400 transition-colors`}>
                       {announcement.title}
                     </h3>
                     
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+                    <p className={`text-sm ${themeClasses.textSecondary} mb-4 line-clamp-3`}>
                       {announcement.description}
                     </p>
 
                     {(announcement.startDate || announcement.endDate) && (
-                      <div className="text-xs text-gray-500 mb-3 space-y-1">
+                      <div className={`text-xs ${themeClasses.textMuted} mb-3 space-y-1`}>
                         {announcement.startDate && (
                           <div>📅 Start: {new Date(announcement.startDate).toLocaleDateString()}</div>
                         )}
@@ -171,11 +182,11 @@ export default function AnnouncementsPage() {
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between text-sm pt-3 border-t border-gray-200">
-                      <span className="text-gray-500 flex items-center gap-1">
+                    <div className={`flex items-center justify-between text-sm pt-3 border-t ${themeClasses.border}`}>
+                      <span className={`${themeClasses.textMuted} flex items-center gap-1`}>
                         📍 {announcement.canteen.name}
                       </span>
-                      <span className="text-indigo-600 font-medium group-hover:underline flex items-center gap-1">
+                      <span className="text-blue-400 font-medium group-hover:underline flex items-center gap-1">
                         Visit Canteen
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -183,10 +194,10 @@ export default function AnnouncementsPage() {
                       </span>
                     </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

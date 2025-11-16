@@ -150,7 +150,7 @@ export default function CanteenDetailsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Canteen Header */}
         <div className="bg-white shadow rounded-lg overflow-hidden">
-          <div className="h-64 bg-gradient-to-br from-indigo-500 to-purple-600">
+          <div className="h-64 bg-gradient-to-br from-orange-500 to-amber-600">
             {canteen?.image && (
               <img
                 src={canteen.image}

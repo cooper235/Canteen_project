@@ -4,7 +4,9 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useToast } from '@/contexts/ToastContext';
+import { themeClasses, animations } from '@/lib/theme';
 
 interface Announcement {
   _id: string;

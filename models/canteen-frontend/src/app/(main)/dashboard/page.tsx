@@ -137,7 +137,7 @@ export default function DashboardPage() {
                     <div className="flex items-center">
                       <div className="flex-shrink-0">
                         <svg
-                          className="h-6 w-6 text-purple-600"
+                          className="h-6 w-6 text-orange-600"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"

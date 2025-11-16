@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSocket } from '@/contexts/SocketContext';
 import { useToast } from '@/contexts/ToastContext';
+import { motion } from 'framer-motion';
+import { Package, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { themeClasses, animations } from '@/lib/theme';
 
 type Order = {
   _id: string;
@@ -92,14 +95,14 @@ export default function OrdersPage() {
 
   const getStatusColor = (status: string) => {
     const colors = {
-      pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      confirmed: 'bg-blue-100 text-blue-800 border-blue-300',
-      preparing: 'bg-purple-100 text-purple-800 border-purple-300',
-      ready: 'bg-green-100 text-green-800 border-green-300',
-      completed: 'bg-gray-100 text-gray-800 border-gray-300',
-      cancelled: 'bg-red-100 text-red-800 border-red-300',
+      pending: 'bg-yellow-900/30 text-yellow-300 border-yellow-700',
+      confirmed: 'bg-blue-900/30 text-blue-300 border-blue-700',
+      preparing: 'bg-purple-900/30 text-purple-300 border-purple-700',
+      ready: 'bg-green-900/30 text-green-300 border-green-700',
+      completed: 'bg-slate-900/30 text-slate-300 border-slate-700',
+      cancelled: 'bg-red-900/30 text-red-300 border-red-700',
     };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return colors[status as keyof typeof colors] || 'bg-slate-900/30 text-slate-300 border-slate-700';
   };
 
   const getStatusIcon = (status: string) => {
@@ -129,11 +132,11 @@ export default function OrdersPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen py-12 bg-gray-50">
+      <div className={`min-h-screen py-12 ${themeClasses.background}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading your orders...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+            <p className={`mt-4 ${themeClasses.textSecondary}`}>Loading your orders...</p>
           </div>
         </div>
       </div>
@@ -141,35 +144,46 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen py-12 bg-gray-50">
+    <div className={`min-h-screen py-12 ${themeClasses.background}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
-          <div className="text-sm text-gray-600">
+        <motion.div
+          className="flex items-center justify-between mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h1 className={`text-3xl font-black ${themeClasses.textPrimary}`}>My Orders</h1>
+          <div className={`text-sm ${themeClasses.textSecondary}`}>
             {orders?.length || 0} order{orders?.length !== 1 ? 's' : ''}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="space-y-6">
+        <motion.div
+          className="space-y-6"
+          variants={animations.containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {orders?.map((order) => (
-            <div
+            <motion.div
               key={order._id}
               onClick={() => router.push(`/orders/${order._id}`)}
-              className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer border border-gray-200"
+              className={`${themeClasses.card} overflow-hidden hover:border-blue-500 transition-all cursor-pointer`}
+              variants={animations.itemVariants}
+              whileHover={{ scale: 1.01, boxShadow: '0 10px 30px rgba(59, 130, 246, 0.2)' }}
             >
               <div className="p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">
+                      <h3 className={`text-lg font-semibold ${themeClasses.textPrimary}`}>
                         {order.canteen.name}
                       </h3>
-                      <span className="text-sm text-gray-500">
+                      <span className={`text-sm ${themeClasses.textMuted}`}>
                         #{order.orderNumber}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-500">
+                    <p className={`text-sm ${themeClasses.textMuted}`}>
                       {getTimeElapsed(order.createdAt)} • {new Date(order.createdAt).toLocaleDateString()} at {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -182,9 +196,9 @@ export default function OrdersPage() {
                     <span
                       className={`px-2 py-1 text-xs font-medium rounded-full ${
                         {
-                          pending: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
-                          completed: 'bg-green-50 text-green-700 border border-green-200',
-                          failed: 'bg-red-50 text-red-700 border border-red-200',
+                          pending: 'bg-yellow-900/30 text-yellow-300 border border-yellow-700',
+                          completed: 'bg-green-900/30 text-green-300 border border-green-700',
+                          failed: 'bg-red-900/30 text-red-300 border border-red-700',
                         }[order.paymentStatus]
                       }`}
                     >
@@ -194,35 +208,34 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Items Preview */}
-                <div className="border-t border-gray-200 pt-4">
+                <div className={`border-t ${themeClasses.border} pt-4`}>
                   <div className="space-y-2">
                     {order.items.slice(0, 2).map((item, index) => {
-                      // Safety check for populated dish data
                       if (!item.dish || typeof item.dish === 'string') {
                         return (
                           <div key={index} className="flex items-center justify-between text-sm">
                             <div className="flex items-center gap-2">
-                              <span className="font-medium text-gray-700">{item.quantity}x</span>
-                              <span className="text-gray-500 italic">Dish unavailable</span>
+                              <span className={`font-medium ${themeClasses.textPrimary}`}>{item.quantity}x</span>
+                              <span className={`${themeClasses.textSecondary} italic`}>Dish unavailable</span>
                             </div>
-                            <span className="text-gray-500">-</span>
+                            <span className={themeClasses.textMuted}>-</span>
                           </div>
                         );
                       }
                       return (
                         <div key={index} className="flex items-center justify-between text-sm">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-gray-700">{item.quantity}x</span>
-                            <span className="text-gray-600">{item.dish.name}</span>
+                            <span className={`font-medium ${themeClasses.textPrimary}`}>{item.quantity}x</span>
+                            <span className={themeClasses.textSecondary}>{item.dish.name}</span>
                           </div>
-                          <span className="text-gray-900 font-medium">
+                          <span className={`font-medium ${themeClasses.textPrimary}`}>
                             ₹{item.dish.price * item.quantity}
                           </span>
                         </div>
                       );
                     })}
                     {order.items.length > 2 && (
-                      <p className="text-sm text-gray-500">
+                      <p className={`text-sm ${themeClasses.textMuted}`}>
                         +{order.items.length - 2} more item{order.items.length - 2 !== 1 ? 's' : ''}
                       </p>
                     )}
@@ -230,41 +243,41 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                <div className={`flex items-center justify-between mt-4 pt-4 border-t ${themeClasses.border}`}>
+                  <div className={`flex items-center gap-4 text-sm ${themeClasses.textMuted}`}>
                     <span className="capitalize">{order.deliveryType}</span>
                     <span>•</span>
                     <span className="capitalize">{order.paymentMethod}</span>
                   </div>
-                  <div className="text-lg font-bold text-gray-900">
+                  <div className={`text-lg font-bold ${themeClasses.textPrimary}`}>
                     Total: ₹{order.totalAmount}
                   </div>
                 </div>
               </div>
 
               {/* Click hint */}
-              <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
-                <p className="text-sm text-gray-600 text-center">
+              <div className="bg-slate-800/50 px-6 py-3 border-t border-slate-700">
+                <p className={`text-sm text-center ${themeClasses.textMuted}`}>
                   Click to view full details →
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
 
           {orders?.length === 0 && (
-            <div className="text-center py-16 bg-white rounded-lg shadow">
-              <div className="text-6xl mb-4">📦</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No orders yet</h3>
-              <p className="text-gray-600 mb-6">Start ordering from your favorite canteens!</p>
+            <div className={`text-center py-16 ${themeClasses.card} rounded-lg`}>
+              <Package size={64} className="mx-auto mb-4 text-slate-600 opacity-60" />
+              <h3 className={`text-xl font-semibold ${themeClasses.textPrimary} mb-2`}>No orders yet</h3>
+              <p className={`${themeClasses.textSecondary} mb-6`}>Start ordering from your favorite canteens!</p>
               <button
                 onClick={() => router.push('/canteens')}
-                className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+                className={`${themeClasses.buttonPrimary} px-6 py-3 rounded-lg`}
               >
                 Browse Canteens
               </button>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
