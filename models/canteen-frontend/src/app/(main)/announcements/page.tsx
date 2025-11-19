@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { API_URL } from '@/lib/config';
 
 interface Announcement {
   _id: string;
@@ -27,7 +27,7 @@ export default function AnnouncementsPage() {
   const { data: announcementsData, isLoading } = useQuery<{ success: boolean; announcements: Announcement[] }>({
     queryKey: ['all-announcements'],
     queryFn: async () => {
-      const response = await fetch('/announcements');
+      const response = await fetch(`${API_URL}/announcements`);
       if (!response.ok) throw new Error('Failed to fetch announcements');
       return response.json();
     },

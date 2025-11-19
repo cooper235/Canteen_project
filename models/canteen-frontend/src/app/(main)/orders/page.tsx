@@ -8,7 +8,7 @@ import { useSocket } from '@/contexts/SocketContext';
 import { useToast } from '@/contexts/ToastContext';
 import { motion } from 'framer-motion';
 import { Package, Clock, CheckCircle, AlertCircle } from 'lucide-react';
-import { themeClasses, animations } from '@/lib/theme';
+import { API_URL } from '@/lib/config';
 
 type Order = {
   _id: string;
@@ -48,7 +48,7 @@ export default function OrdersPage() {
   const { data: ordersData, isLoading } = useQuery<{ success: boolean; orders: Order[] }>({
     queryKey: ['my-orders'],
     queryFn: async () => {
-      const response = await fetch('/orders/my-orders', {
+      const response = await fetch(`${API_URL}/orders/my-orders`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

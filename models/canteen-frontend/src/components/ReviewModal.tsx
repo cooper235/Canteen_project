@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { API_URL } from '@/lib/config';
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -52,7 +52,7 @@ export default function ReviewModal({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/reviews', {
+      const response = await fetch(`${API_URL}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

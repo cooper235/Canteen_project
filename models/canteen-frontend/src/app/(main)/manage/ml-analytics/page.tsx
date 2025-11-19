@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import ForecastingDashboard from '@/components/ForecastingDashboard';
-import SentimentAnalysis from '@/components/SentimentAnalysis';
+import { API_URL } from '@/lib/config';
 
 interface Canteen {
   _id: string;
@@ -32,7 +32,7 @@ export default function MLAnalyticsPage() {
 
     const fetchCanteen = async () => {
       try {
-        const response = await fetch('/canteens/my-canteen', {
+        const response = await fetch(`${API_URL}/canteens/my-canteen`, {
           credentials: 'include',
         });
 

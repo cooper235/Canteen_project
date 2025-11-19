@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useSocket } from '@/contexts/SocketContext';
 import { useToast } from '@/contexts/ToastContext';
 import { motion } from 'framer-motion';
-import { themeClasses, animations } from '@/lib/theme';
+import { API_URL } from '@/lib/config';
 
 interface Analytics {
   totalOrders: number;
@@ -45,7 +45,7 @@ export default function CanteenDashboardPage() {
   const { data: canteenData, isLoading: canteenLoading } = useQuery<{ success: boolean; canteens: Canteen[] }>({
     queryKey: ['my-canteens'],
     queryFn: async () => {
-      const response = await fetch('/canteens/owner/my-canteens', {
+      const response = await fetch(`${API_URL}/canteens/owner/my-canteens`, {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
