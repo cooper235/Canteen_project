@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import clsx from 'clsx';
 import { themeClasses, animations } from '@/lib/theme';
 
 interface Announcement {
@@ -71,12 +72,12 @@ export default function AnnouncementsPage() {
   ];
 
   return (
-    <div className={`min-h-screen py-8 ${themeClasses.background}`}>
+    <div className={clsx('min-h-screen py-8', themeClasses.background)}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className={`text-3xl font-bold ${themeClasses.textPrimary}`}>📢 All Announcements</h1>
-          <p className={`mt-2 ${themeClasses.textSecondary}`}>Stay updated with the latest news, offers, and updates from all canteens</p>
+          <h1 className={clsx('text-3xl font-bold', themeClasses.textPrimary)}>📢 All Announcements</h1>
+          <p className={clsx('mt-2', themeClasses.textSecondary)}>Stay updated with the latest news, offers, and updates from all canteens</p>
         </div>
 
         {/* Filter Tabs */}

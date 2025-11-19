@@ -167,10 +167,10 @@ export default function ManageCanteenPage() {
   // Show create form if no canteen exists
   if (!canteen) {
     return (
-      <div className={`min-h-screen py-8 ${themeClasses.background}`}>
+      <div className={clsx('min-h-screen py-8', themeClasses.background)}>
         <motion.div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-          <motion.div className={`${themeClasses.card} shadow-lg rounded-lg p-8 border border-slate-600/50`} initial={{ scale: 0.95 }} animate={{ scale: 1 }}>
-            <h1 className={`text-3xl font-bold ${themeClasses.textPrimary} mb-6`}>Create Your Canteen</h1>
+          <motion.div className={clsx(themeClasses.card, 'shadow-lg rounded-lg p-8 border border-slate-600/50')} initial={{ scale: 0.95 }} animate={{ scale: 1 }}>
+            <h1 className={clsx('text-3xl font-bold mb-6', themeClasses.textPrimary)}>Create Your Canteen</h1>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>

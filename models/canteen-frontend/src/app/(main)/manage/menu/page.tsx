@@ -261,7 +261,7 @@ export default function ManageMenuPage() {
   };
 
   return (
-    <div className={`min-h-screen py-8 ${themeClasses.background}`}>
+    <div className={clsx('min-h-screen py-8', themeClasses.background)}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div

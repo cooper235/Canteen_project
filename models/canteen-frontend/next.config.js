@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compiler: {
+    emotion: false,
+  },
+  experimental: {
+    forceSwcTransforms: false,
+  },
+  swcMinify: false,
   images: {
     remotePatterns: [
       {
