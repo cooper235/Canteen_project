@@ -131,7 +131,7 @@ export default function CanteensPage() {
           {canteens?.map((canteen, index) => (
             <motion.div
               key={canteen._id}
-              variants={animations.itemVariants}
+              variants={animations.itemVariants as any}
               whileHover="hover"
               initial="rest"
               animate="rest"

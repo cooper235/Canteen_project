@@ -6,8 +6,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/contexts/ToastContext';
 import { useSocket } from '@/contexts/SocketContext';
-import { motion } from 'framer-motion';
-import { themeClasses, animations } from '@/lib/theme';
 
 interface Order {
   _id: string;
@@ -140,10 +138,10 @@ export default function ManageOrdersPage() {
 
   if (status === 'loading' || canteenLoading) {
     return (
-      <div className={`min-h-screen py-12 ${themeClasses.background} flex items-center justify-center`}>
+      <div className="min-h-screen py-12 bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className={`mt-4 ${themeClasses.textSecondary}`}>Loading orders...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading orders...</p>
         </div>
       </div>
     );
@@ -156,13 +154,13 @@ export default function ManageOrdersPage() {
 
   if (!canteen) {
     return (
-      <div className={`min-h-screen py-12 ${themeClasses.background} flex items-center justify-center`}>
+      <div className="min-h-screen py-12 bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className={`text-3xl font-bold ${themeClasses.textPrimary}`}>No Canteen Found</h1>
-          <p className={`mt-4 ${themeClasses.textMuted}`}>You don't have a canteen yet. Please create one first.</p>
+          <h1 className="text-3xl font-bold text-gray-900">No Canteen Found</h1>
+          <p className="mt-4 text-gray-500">You don't have a canteen yet. Please create one first.</p>
           <button
             onClick={() => router.push('/manage/canteen')}
-            className={`mt-6 ${themeClasses.buttonPrimary} text-white px-6 py-3 rounded-md hover:opacity-90`}
+            className="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700"
           >
             Create Canteen
           </button>
@@ -178,14 +176,14 @@ export default function ManageOrdersPage() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      pending: 'bg-yellow-900/30 text-yellow-300 border-yellow-700/50',
-      confirmed: 'bg-blue-900/30 text-blue-300 border-blue-700/50',
-      preparing: 'bg-purple-900/30 text-purple-300 border-purple-700/50',
-      ready: 'bg-green-900/30 text-green-300 border-green-700/50',
-      completed: 'bg-gray-700/50 text-gray-200 border-gray-600/50',
-      cancelled: 'bg-red-900/30 text-red-300 border-red-700/50',
+      pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+      confirmed: 'bg-blue-100 text-blue-800 border-blue-300',
+      preparing: 'bg-purple-100 text-purple-800 border-purple-300',
+      ready: 'bg-green-100 text-green-800 border-green-300',
+      completed: 'bg-gray-100 text-gray-800 border-gray-300',
+      cancelled: 'bg-red-100 text-red-800 border-red-300',
     };
-    return colors[status] || 'bg-gray-700/50 text-gray-200';
+    return colors[status] || 'bg-gray-100 text-gray-800';
   };
 
   const getNextStatus = (currentStatus: string): string | null => {
@@ -230,12 +228,12 @@ export default function ManageOrdersPage() {
   };
 
   return (
-    <div className={`min-h-screen py-8 ${themeClasses.background}`}>
-      <motion.div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+    <div className="min-h-screen py-8 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className={`text-3xl font-bold ${themeClasses.textPrimary}`}>Manage Orders</h1>
-          <p className={`mt-2 ${themeClasses.textSecondary}`}>{canteen?.name}</p>
+          <h1 className="text-3xl font-bold text-gray-900">Manage Orders</h1>
+          <p className="mt-2 text-gray-600">{canteen?.name}</p>
         </div>
 
         {/* Status Filters */}
@@ -253,8 +251,8 @@ export default function ManageOrdersPage() {
               onClick={() => setFilterStatus(filter.key)}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 filterStatus === filter.key
-                  ? `${themeClasses.buttonPrimary} text-white`
-                  : `${themeClasses.card} ${themeClasses.textSecondary} hover:bg-slate-600/50 border border-slate-600/50`
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
             >
               {filter.label}
@@ -270,39 +268,37 @@ export default function ManageOrdersPage() {
         {/* Orders List */}
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className={`mt-4 ${themeClasses.textSecondary}`}>Loading orders...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading orders...</p>
           </div>
         ) : filteredOrders.length === 0 ? (
-          <div className={`${themeClasses.card} rounded-lg shadow p-12 text-center border border-slate-600/50`}>
-            <svg className={`mx-auto h-12 w-12 ${themeClasses.textMuted}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-white rounded-lg shadow p-12 text-center">
+            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
-            <p className={`mt-4 ${themeClasses.textMuted} text-lg`}>No orders found</p>
-            <p className={`text-sm ${themeClasses.textMuted} mt-2`}>
+            <p className="mt-4 text-gray-500 text-lg">No orders found</p>
+            <p className="text-sm text-gray-400 mt-2">
               {filterStatus === 'all' ? 'No orders yet' : `No ${filterStatus} orders`}
             </p>
           </div>
         ) : (
           <div className="space-y-4">
             {filteredOrders.map((order) => (
-              <motion.div
+              <div
                 key={order._id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`${themeClasses.card} rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-slate-600/50`}
+                className="bg-white rounded-lg shadow hover:shadow-md transition-shadow"
               >
                 <div className="p-6">
                   {/* Order Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className={`text-xl font-bold ${themeClasses.textPrimary}`}>
+                      <h3 className="text-xl font-bold text-gray-900">
                         Order #{order.orderNumber}
                       </h3>
-                      <p className={`text-sm ${themeClasses.textSecondary} mt-1`}>
+                      <p className="text-sm text-gray-600 mt-1">
                         {order.student.name} • {order.student.email}
                       </p>
-                      <p className={`text-xs ${themeClasses.textMuted} mt-1`}>
+                      <p className="text-xs text-gray-500 mt-1">
                         {getTimeElapsed(order.createdAt)} • {new Date(order.createdAt).toLocaleString()}
                       </p>
                     </div>
@@ -310,22 +306,22 @@ export default function ManageOrdersPage() {
                       <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold border-2 ${getStatusColor(order.status)}`}>
                         {order.status.toUpperCase()}
                       </span>
-                      <p className={`text-2xl font-bold ${themeClasses.textPrimary} mt-2`}>₹{order.totalAmount}</p>
+                      <p className="text-2xl font-bold text-gray-900 mt-2">₹{order.totalAmount}</p>
                     </div>
                   </div>
 
                   {/* Order Items */}
-                  <div className={`border-t border-slate-600/50 pt-4 mb-4`}>
-                    <h4 className={`font-semibold ${themeClasses.textPrimary} mb-2`}>Items:</h4>
+                  <div className="border-t pt-4 mb-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">Items:</h4>
                     <div className="space-y-2">
                       {order.items.map((item, index) => {
                         const dish = typeof item.dish !== 'string' ? item.dish : null;
                         return (
                           <div key={index} className="flex justify-between text-sm">
-                            <span className={themeClasses.textSecondary}>
+                            <span className="text-gray-700">
                               {item.quantity}x {dish ? dish.name : 'Dish unavailable'}
                             </span>
-                            <span className={`font-medium ${themeClasses.textPrimary}`}>₹{item.price * item.quantity}</span>
+                            <span className="font-medium text-gray-900">₹{item.price * item.quantity}</span>
                           </div>
                         );
                       })}
@@ -333,42 +329,42 @@ export default function ManageOrdersPage() {
                   </div>
 
                   {/* Order Details */}
-                  <div className={`border-t border-slate-600/50 pt-4 mb-4 grid grid-cols-2 gap-4 text-sm`}>
+                  <div className="border-t pt-4 mb-4 grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className={themeClasses.textSecondary}>Payment:</span>
-                      <span className={`ml-2 font-medium ${themeClasses.textPrimary} uppercase`}>{order.paymentMethod}</span>
+                      <span className="text-gray-600">Payment:</span>
+                      <span className="ml-2 font-medium text-gray-900 uppercase">{order.paymentMethod}</span>
                       <span className={`ml-2 text-xs px-2 py-1 rounded ${
-                        order.paymentStatus === 'paid' ? 'bg-green-900/30 text-green-300' : 'bg-yellow-900/30 text-yellow-300'
+                        order.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                       }`}>
                         {order.paymentStatus}
                       </span>
                     </div>
                     <div>
-                      <span className={themeClasses.textSecondary}>Delivery:</span>
-                      <span className={`ml-2 font-medium ${themeClasses.textPrimary} capitalize`}>{order.deliveryType}</span>
+                      <span className="text-gray-600">Delivery:</span>
+                      <span className="ml-2 font-medium text-gray-900 capitalize">{order.deliveryType}</span>
                     </div>
                   </div>
 
                   {/* Actions */}
                   {order.status !== 'completed' && order.status !== 'cancelled' && (
-                    <div className={`border-t border-slate-600/50 pt-4 flex gap-3`}>
+                    <div className="border-t pt-4 flex gap-3">
                       <button
                         onClick={() => handleStatusUpdate(order._id, order.status)}
                         disabled={updateStatusMutation.isPending}
-                        className={`flex-1 ${themeClasses.buttonPrimary} text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity font-medium disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {updateStatusMutation.isPending ? 'Updating...' : getStatusLabel(order.status)}
                       </button>
                       <button
                         onClick={() => router.push(`/orders/${order._id}`)}
-                        className={`px-4 py-2 ${themeClasses.card} ${themeClasses.textSecondary} rounded-md hover:bg-slate-600/50 transition-colors font-medium border border-slate-600/50`}
+                        className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium"
                       >
                         View Details
                       </button>
                     </div>
                   )}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}

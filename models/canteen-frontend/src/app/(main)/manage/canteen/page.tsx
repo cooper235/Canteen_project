@@ -4,9 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useToast } from '@/contexts/ToastContext';
-import { themeClasses, animations } from '@/lib/theme';
 
 interface Canteen {
   _id: string;
@@ -166,13 +164,13 @@ export default function ManageCanteenPage() {
   // Show create form if no canteen exists
   if (!canteen) {
     return (
-      <div className={`min-h-screen py-8 ${themeClasses.background}`}>
-        <motion.div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-          <motion.div className={`${themeClasses.card} shadow-lg rounded-lg p-8 border border-slate-600/50`} initial={{ scale: 0.95 }} animate={{ scale: 1 }}>
-            <h1 className={`text-3xl font-bold ${themeClasses.textPrimary} mb-6`}>Create Your Canteen</h1>
+      <div className="min-h-screen py-8 bg-gray-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white shadow rounded-lg p-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-6">Create Your Canteen</h1>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Canteen Name *
                 </label>
                 <input
@@ -180,13 +178,13 @@ export default function ManageCanteenPage() {
                   required
                   value={formData.name || ''}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={`w-full px-4 py-2 border border-slate-600/50 rounded-md ${themeClasses.card} ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-700/50`}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="e.g., Main Campus Canteen"
                 />
               </div>
 
               <div>
-                <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Description *
                 </label>
                 <textarea
@@ -194,13 +192,13 @@ export default function ManageCanteenPage() {
                   rows={4}
                   value={formData.description || ''}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className={`w-full px-4 py-2 border border-slate-600/50 rounded-md ${themeClasses.card} ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-700/50`}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Describe your canteen..."
                 />
               </div>
 
               <div>
-                <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Location *
                 </label>
                 <input
@@ -208,27 +206,27 @@ export default function ManageCanteenPage() {
                   required
                   value={typeof formData.location === 'string' ? formData.location : ''}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className={`w-full px-4 py-2 border border-slate-600/50 rounded-md ${themeClasses.card} ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-700/50`}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="e.g., Building A, Ground Floor"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Contact Number
                   </label>
                   <input
                     type="tel"
                     value={formData.contactPhone || ''}
                     onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
-                    className={`w-full px-4 py-2 border border-slate-600/50 rounded-md ${themeClasses.card} ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-700/50`}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                     placeholder="+1234567890"
                   />
                 </div>
 
                 <div>
-                  <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Email *
                   </label>
                   <input
@@ -236,7 +234,7 @@ export default function ManageCanteenPage() {
                     required
                     value={formData.email || ''}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={`w-full px-4 py-2 border border-slate-600/50 rounded-md ${themeClasses.card} ${themeClasses.textPrimary} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-700/50`}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                     placeholder="canteen@example.com"
                   />
                 </div>
