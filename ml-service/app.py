@@ -11,7 +11,10 @@ from services.sentiment import SentimentService
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5000"])  # Allow backend to call ML service
+
+# Allow backend to call ML service - support both local and production
+allowed_origins = os.getenv('ALLOWED_ORIGINS', 'http://localhost:5000').split(',')
+CORS(app, origins=allowed_origins, supports_credentials=True)
 
 # Initialize services
 recommendation_service = RecommendationService()

@@ -176,7 +176,8 @@ async function populateDummyData() {
 
       try {
         const axios = (await import('axios')).default;
-        const response = await axios.post('http://localhost:5001/api/sentiment/analyze', 
+        const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
+        const response = await axios.post(`${ML_SERVICE_URL}/api/sentiment/analyze`, 
           { text: reviewData.text },
           { timeout: 5000 }
         );
@@ -236,7 +237,8 @@ async function populateDummyData() {
         createdAt: order.createdAt
       }));
 
-      const response = await axios.post('http://localhost:5001/api/recommendations/train',
+      const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
+      const response = await axios.post(`${ML_SERVICE_URL}/api/recommendations/train`,
         { orders: trainingData },
         { timeout: 30000 }
       );
