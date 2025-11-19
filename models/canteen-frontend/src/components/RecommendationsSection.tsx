@@ -124,7 +124,7 @@ export default function RecommendationsSection() {
   if (!session?.user?.id || loading) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-2xl font-bold mb-4">🤖 Recommended for You</h2>
+        <h2 className="text-2xl font-bold mb-4">✨ Recommended for You</h2>
         <div className="flex space-x-4 overflow-x-auto">
           {[1, 2, 3].map(i => (
             <div key={i} className="w-64 flex-shrink-0">
@@ -141,7 +141,7 @@ export default function RecommendationsSection() {
   if (dishes.length === 0) {
     return (
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md p-6 mb-8 border border-blue-100">
-        <h2 className="text-2xl font-bold mb-2 text-indigo-900">🤖 Personalized Recommendations</h2>
+        <h2 className="text-2xl font-bold mb-2 text-indigo-900">✨ Personalized Recommendations</h2>
         <p className="text-gray-600">
           Order some dishes to get personalized recommendations powered by AI!
         </p>
@@ -153,7 +153,7 @@ export default function RecommendationsSection() {
     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md p-6 mb-8 border border-blue-100">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-indigo-900">🤖 Recommended for You</h2>
+          <h2 className="text-2xl font-bold text-indigo-900">✨ Recommended for You</h2>
           <p className="text-sm text-gray-600">AI-powered suggestions based on your preferences</p>
         </div>
         <div className="bg-indigo-100 px-3 py-1 rounded-full">

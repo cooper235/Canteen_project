@@ -105,10 +105,10 @@ export default function OrderDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen py-12 bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen py-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading order details...</p>
+          <p className="mt-4 text-gray-300">Loading order details...</p>
         </div>
       </div>
     );
@@ -116,11 +116,11 @@ export default function OrderDetailPage() {
 
   if (error || !data?.order) {
     return (
-      <div className="min-h-screen py-12 bg-gray-50">
+      <div className="min-h-screen py-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900">Order Not Found</h1>
-            <p className="mt-4 text-gray-500">This order doesn't exist or you don't have access to it</p>
+            <h1 className="text-3xl font-bold text-white">Order Not Found</h1>
+            <p className="mt-4 text-gray-400">This order doesn't exist or you don't have access to it</p>
             <button
               onClick={() => router.push('/orders')}
               className="mt-6 inline-block bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700"
