@@ -35,7 +35,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     }
 
     console.log('✅ Initiating socket connection for user:', session.user.id)
-    const socketUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+    const socketUrl = process.env.NEXT_PUBLIC_API_URL || ''
     
     const newSocket = io(socketUrl, {
       transports: ['websocket', 'polling'],

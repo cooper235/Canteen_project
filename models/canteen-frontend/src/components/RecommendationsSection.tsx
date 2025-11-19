@@ -53,7 +53,7 @@ export default function RecommendationsSection() {
         
         // Get recommendations from backend API using user email
         const response = await fetch(
-          `http://localhost:5000/api/ml/recommendations/user/${userEmail}?limit=6`,
+          `/ml/recommendations/user/${userEmail}?limit=6`,
           {
             method: 'GET',
             headers: {
@@ -76,7 +76,7 @@ export default function RecommendationsSection() {
             try {
               console.log(`Fetching dish ${rec.dish_id}...`);
               const dishResponse = await fetch(
-                `http://localhost:5000/api/dishes/${rec.dish_id}`,
+                `/dishes/${rec.dish_id}`,
                 {
                   headers: {
                     'Authorization': `Bearer ${token}`

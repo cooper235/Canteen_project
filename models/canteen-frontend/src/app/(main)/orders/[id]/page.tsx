@@ -3,6 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
+import { API_URL } from '@/lib/config';
 
 type Order = {
   _id: string;
@@ -45,7 +46,7 @@ export default function OrderDetailPage() {
   const { data, isLoading, error } = useQuery<{ success: boolean; order: Order }>({
     queryKey: ['order', orderId],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+      const response = await fetch(`${API_URL}/orders/${orderId}`, {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },

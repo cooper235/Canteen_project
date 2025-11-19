@@ -35,7 +35,7 @@ export default function ProfilePage() {
   const { data: ordersData } = useQuery<{ success: boolean; orders: Order[] }>({
     queryKey: ['my-orders'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:5000/api/orders/my-orders', {
+      const response = await fetch('/orders/my-orders', {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },

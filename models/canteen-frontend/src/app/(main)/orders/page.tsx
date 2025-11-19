@@ -48,7 +48,7 @@ export default function OrdersPage() {
   const { data: ordersData, isLoading } = useQuery<{ success: boolean; orders: Order[] }>({
     queryKey: ['my-orders'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:5000/api/orders/my-orders', {
+      const response = await fetch('/orders/my-orders', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

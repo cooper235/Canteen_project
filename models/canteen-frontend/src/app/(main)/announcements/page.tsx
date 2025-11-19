@@ -27,7 +27,7 @@ export default function AnnouncementsPage() {
   const { data: announcementsData, isLoading } = useQuery<{ success: boolean; announcements: Announcement[] }>({
     queryKey: ['all-announcements'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:5000/api/announcements');
+      const response = await fetch('/announcements');
       if (!response.ok) throw new Error('Failed to fetch announcements');
       return response.json();
     },

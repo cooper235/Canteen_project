@@ -46,7 +46,7 @@ export default function ManageOrdersPage() {
   const { data: canteenData, isLoading: canteenLoading } = useQuery<{ success: boolean; canteens: Canteen[] }>({
     queryKey: ['my-canteens'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:5000/api/canteens/owner/my-canteens', {
+      const response = await fetch('/canteens/owner/my-canteens', {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
@@ -63,7 +63,7 @@ export default function ManageOrdersPage() {
   const { data: ordersData, isLoading } = useQuery<{ success: boolean; orders: Order[] }>({
     queryKey: ['canteen-orders', canteen?._id],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/api/orders/canteen/${canteen?._id}`, {
+      const response = await fetch(`/orders/canteen/${canteen?._id}`, {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
@@ -108,7 +108,7 @@ export default function ManageOrdersPage() {
   // Update order status mutation
   const updateStatusMutation = useMutation({
     mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/status`, {
+      const response = await fetch(`/orders/${orderId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -46,7 +46,7 @@ export default function ManageCanteenPage() {
   const { data: canteenData, isLoading } = useQuery<{ success: boolean; canteens: Canteen[] }>({
     queryKey: ['my-canteens'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:5000/api/canteens/owner/my-canteens', {
+      const response = await fetch('/canteens/owner/my-canteens', {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
@@ -62,7 +62,7 @@ export default function ManageCanteenPage() {
   // Create canteen mutation
   const createCanteenMutation = useMutation({
     mutationFn: async (data: Partial<Canteen>) => {
-      const response = await fetch('http://localhost:5000/api/canteens', {
+      const response = await fetch('/canteens', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export default function ManageCanteenPage() {
   // Update canteen mutation
   const updateCanteenMutation = useMutation({
     mutationFn: async (data: Partial<Canteen>) => {
-      const response = await fetch(`http://localhost:5000/api/canteens/${canteen?._id}`, {
+      const response = await fetch(`/canteens/${canteen?._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

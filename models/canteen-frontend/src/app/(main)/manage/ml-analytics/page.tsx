@@ -32,7 +32,7 @@ export default function MLAnalyticsPage() {
 
     const fetchCanteen = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/canteens/my-canteen', {
+        const response = await fetch('/canteens/my-canteen', {
           credentials: 'include',
         });
 

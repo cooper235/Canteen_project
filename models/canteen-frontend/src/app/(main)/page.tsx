@@ -64,7 +64,7 @@ export default function HomePage() {
       try {
         setLoading(true);
         console.log('🔄 Fetching canteens...');
-        const response = await fetch('http://localhost:5000/api/canteens');
+        const response = await fetch('/canteens');
         console.log('✅ Response status:', response.status);
 
         if (!response.ok) {

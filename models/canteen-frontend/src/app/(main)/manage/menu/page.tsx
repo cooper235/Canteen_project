@@ -51,7 +51,7 @@ export default function ManageMenuPage() {
   const { data: canteenData, isLoading: canteenLoading } = useQuery<{ success: boolean; canteens: Canteen[] }>({
     queryKey: ['my-canteens'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:5000/api/canteens/owner/my-canteens', {
+      const response = await fetch('/canteens/owner/my-canteens', {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
@@ -68,7 +68,7 @@ export default function ManageMenuPage() {
   const { data: dishesData, isLoading: dishesLoading } = useQuery<{ success: boolean; dishes: Dish[] }>({
     queryKey: ['canteen-dishes', canteen?._id],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/api/dishes/canteen/${canteen?._id}`, {
+      const response = await fetch(`/dishes/canteen/${canteen?._id}`, {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
@@ -82,7 +82,7 @@ export default function ManageMenuPage() {
   // Create dish mutation
   const createDishMutation = useMutation({
     mutationFn: async (data: Partial<Dish>) => {
-      const response = await fetch(`http://localhost:5000/api/dishes/canteen/${canteen?._id}`, {
+      const response = await fetch(`/dishes/canteen/${canteen?._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ export default function ManageMenuPage() {
   // Update dish mutation
   const updateDishMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Dish> }) => {
-      const response = await fetch(`http://localhost:5000/api/dishes/${id}`, {
+      const response = await fetch(`/dishes/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export default function ManageMenuPage() {
   // Toggle availability mutation
   const toggleAvailabilityMutation = useMutation({
     mutationFn: async ({ id, availability }: { id: string; availability: boolean }) => {
-      const response = await fetch(`http://localhost:5000/api/dishes/${id}/availability`, {
+      const response = await fetch(`/dishes/${id}/availability`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -155,7 +155,7 @@ export default function ManageMenuPage() {
   // Delete dish mutation
   const deleteDishMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`http://localhost:5000/api/dishes/${id}`, {
+      const response = await fetch(`/dishes/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,

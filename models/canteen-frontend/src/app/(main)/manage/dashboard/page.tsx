@@ -45,7 +45,7 @@ export default function CanteenDashboardPage() {
   const { data: canteenData, isLoading: canteenLoading } = useQuery<{ success: boolean; canteens: Canteen[] }>({
     queryKey: ['my-canteens'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:5000/api/canteens/owner/my-canteens', {
+      const response = await fetch('/canteens/owner/my-canteens', {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
@@ -74,7 +74,7 @@ export default function CanteenDashboardPage() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/analytics/canteen/${canteen?._id}?${params}`,
+        `/analytics/canteen/${canteen?._id}?${params}`,
         {
           headers: {
             'Authorization': `Bearer ${session?.user?.token}`,

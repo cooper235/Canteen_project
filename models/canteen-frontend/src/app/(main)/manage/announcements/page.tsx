@@ -44,7 +44,7 @@ export default function ManageAnnouncementsPage() {
   const { data: canteenData, isLoading: canteenLoading } = useQuery<{ success: boolean; canteens: Canteen[] }>({
     queryKey: ['my-canteens'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:5000/api/canteens/owner/my-canteens', {
+      const response = await fetch('/canteens/owner/my-canteens', {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
@@ -61,7 +61,7 @@ export default function ManageAnnouncementsPage() {
   const { data: announcementsData, isLoading: announcementsLoading } = useQuery<{ success: boolean; announcements: Announcement[] }>({
     queryKey: ['canteen-announcements', canteen?._id],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/api/announcements/canteen/${canteen?._id}`, {
+      const response = await fetch(`/announcements/canteen/${canteen?._id}`, {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
@@ -75,7 +75,7 @@ export default function ManageAnnouncementsPage() {
   // Create announcement
   const createMutation = useMutation({
     mutationFn: async (data: Partial<Announcement>) => {
-      const response = await fetch(`http://localhost:5000/api/announcements`, {
+      const response = await fetch(`/announcements`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ export default function ManageAnnouncementsPage() {
   // Update announcement
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Announcement> }) => {
-      const response = await fetch(`http://localhost:5000/api/announcements/${id}`, {
+      const response = await fetch(`/announcements/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ export default function ManageAnnouncementsPage() {
   // Delete announcement
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`http://localhost:5000/api/announcements/${id}`, {
+      const response = await fetch(`/announcements/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,

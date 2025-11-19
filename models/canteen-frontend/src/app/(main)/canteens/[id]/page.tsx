@@ -7,6 +7,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { useState, useMemo } from 'react';
 import ReviewModal from '@/components/ReviewModal';
 import ReviewsList from '@/components/ReviewsList';
+import { API_URL } from '@/lib/config';
 
 type Dish = {
   _id: string;
@@ -71,7 +72,7 @@ export default function CanteenDetailsPage() {
   const { data: canteenResponse, isLoading: canteenLoading } = useQuery<{ success: boolean; canteen: Canteen }>({
     queryKey: ['canteen', canteenId],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/api/canteens/${canteenId}`, {
+      const response = await fetch(`${API_URL}/canteens/${canteenId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +92,7 @@ export default function CanteenDetailsPage() {
   const { data: dishesResponse, isLoading: dishesLoading } = useQuery<{ success: boolean; dishes: Dish[] }>({
     queryKey: ['canteen-dishes', canteenId],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/api/dishes/canteen/${canteenId}`, {
+      const response = await fetch(`${API_URL}/dishes/canteen/${canteenId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
