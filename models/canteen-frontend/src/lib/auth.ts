@@ -12,6 +12,8 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
+          console.log('🔐 Auth: Attempting login with API_URL:', API_URL);
+          
           const response = await fetch(`${API_URL}/auth/login`, {
             method: 'POST',
             headers: {
@@ -23,12 +25,18 @@ export const authOptions: NextAuthOptions = {
             }),
           });
 
+          console.log('🔐 Auth: Response status:', response.status);
+
           if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('🔐 Auth: Login failed:', errorData);
             return null;
           }
 
           const data = await response.json();
           const user = data.user;
+
+          console.log('🔐 Auth: Login successful for user:', user.email);
 
           return {
             id: user.id || user._id,
@@ -39,6 +47,7 @@ export const authOptions: NextAuthOptions = {
             canteenId: user.canteenId,
           };
         } catch (error) {
+          console.error('🔐 Auth: Exception during login:', error);
           return null;
         }
       }
@@ -72,4 +81,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };
