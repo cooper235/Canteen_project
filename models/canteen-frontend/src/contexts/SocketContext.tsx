@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { io, Socket } from 'socket.io-client'
+import { SOCKET_URL } from '@/lib/config'
 
 interface SocketContextType {
   socket: Socket | null
@@ -35,9 +36,8 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     }
 
     console.log('✅ Initiating socket connection for user:', session.user.id)
-    const socketUrl = process.env.NEXT_PUBLIC_API_URL || ''
     
-    const newSocket = io(socketUrl, {
+    const newSocket = io(SOCKET_URL, {
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 5,
