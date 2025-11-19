@@ -8,6 +8,7 @@ import { useSocket } from '@/contexts/SocketContext';
 import { useToast } from '@/contexts/ToastContext';
 import { motion } from 'framer-motion';
 import { Package, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { themeClasses } from '@/lib/theme';
 import { API_URL } from '@/lib/config';
 
 type Order = {

@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { useSocket } from '@/contexts/SocketContext';
 import { useToast } from '@/contexts/ToastContext';
 import { motion } from 'framer-motion';
+import { themeClasses } from '@/lib/theme';
 import { API_URL } from '@/lib/config';
 
 interface Analytics {

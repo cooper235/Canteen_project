@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, ShoppingBag, CheckCircle, Clock, TrendingUp } from 'lucide-react';
+import { themeClasses } from '@/lib/theme';
 import { API_URL } from '@/lib/config';
 
 interface Order {

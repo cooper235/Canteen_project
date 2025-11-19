@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { themeClasses } from '@/lib/theme';
 import { API_URL } from '@/lib/config';
 
 export default function CheckoutPage() {
