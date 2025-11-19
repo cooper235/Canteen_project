@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -231,7 +230,7 @@ export default function ManageOrdersPage() {
   };
 
   return (
-    <div className={clsx('min-h-screen py-8', themeClasses.background)}>
+    <div className={`min-h-screen py-8 ${themeClasses.background}`}>
       <motion.div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
         {/* Header */}
         <div className="mb-8">

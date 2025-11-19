@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -75,7 +74,7 @@ export default function MLAnalyticsPage() {
   }
 
   return (
-    <div className={clsx('min-h-screen', themeClasses.background)}>
+    <div className={`min-h-screen ${themeClasses.background}`}>
       <motion.div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
         {/* Header */}
         <motion.div className="mb-8" initial={{ y: -20 }} animate={{ y: 0 }}>

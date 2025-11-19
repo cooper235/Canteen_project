@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -261,7 +260,7 @@ export default function ManageMenuPage() {
   };
 
   return (
-    <div className={clsx('min-h-screen py-8', themeClasses.background)}>
+    <div className={`min-h-screen py-8 ${themeClasses.background}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
