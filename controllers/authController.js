@@ -57,22 +57,31 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body
 
+    console.log('🔐 [Backend] Login attempt for:', email);
+
     // Validation
     if (!email || !password) {
+      console.log('❌ [Backend] Missing email or password');
       return res.status(400).json({ success: false, message: "Please provide email and password" })
     }
 
     // Check for user
     const user = await User.findOne({ email }).select("+password")
     if (!user) {
+      console.log('❌ [Backend] User not found:', email);
       return res.status(401).json({ success: false, message: "Invalid credentials" })
     }
+
+    console.log('👤 [Backend] User found:', { id: user._id, role: user.role });
 
     // Check if password matches
     const isMatch = await user.matchPassword(password)
     if (!isMatch) {
+      console.log('❌ [Backend] Password mismatch for:', email);
       return res.status(401).json({ success: false, message: "Invalid credentials" })
     }
+
+    console.log('✅ [Backend] Password matched');
 
     const token = generateToken(user._id, user.role)
 
@@ -84,6 +93,13 @@ export const login = async (req, res) => {
         canteenId = canteen._id.toString();
       }
     }
+
+    console.log('🎫 [Backend] Sending response:', { 
+      userId: user._id, 
+      role: user.role, 
+      canteenId,
+      tokenLength: token?.length 
+    });
 
     res.status(200).json({
       success: true,
@@ -98,6 +114,7 @@ export const login = async (req, res) => {
       },
     })
   } catch (error) {
+    console.error('💥 [Backend] Login exception:', error);
     res.status(500).json({ success: false, message: error.message })
   }
 }
