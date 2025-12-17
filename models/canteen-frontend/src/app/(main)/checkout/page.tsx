@@ -40,6 +40,27 @@ export default function CheckoutPage() {
     );
   }
 
+  // Check if token exists in session
+  const userToken = (session?.user as any)?.token;
+  if (!userToken) {
+    return (
+      <div className={`min-h-screen py-12 ${themeClasses.background}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className={`text-3xl font-bold ${themeClasses.textPrimary}`}>Session Expired</h1>
+            <p className={`mt-4 ${themeClasses.textSecondary}`}>Your session has expired. Please login again to continue.</p>
+            <Link
+              href="/login"
+              className="mt-6 inline-block bg-gradient-to-r from-orange-600 to-amber-500 text-white px-6 py-3 rounded-md hover:from-orange-700 hover:to-amber-600"
+            >
+              Login Again
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className={`min-h-screen py-12 ${themeClasses.background}`}>
@@ -70,9 +91,20 @@ export default function CheckoutPage() {
 
     console.log('🔄 Starting order submission...');
     console.log('Session:', session);
-    console.log('Token:', session?.user?.token);
+    console.log('Session user:', session?.user);
+    console.log('Token:', (session?.user as any)?.token);
 
     try {
+      // Get the token from session
+      const token = (session?.user as any)?.token;
+      
+      if (!token) {
+        console.error('❌ No token found in session');
+        setError('Authentication token not found. Please login again.');
+        setLoading(false);
+        return;
+      }
+
       const orderData = {
         canteenId,
         items: items.map(item => ({
@@ -85,12 +117,13 @@ export default function CheckoutPage() {
       };
 
       console.log('📦 Order data:', orderData);
+      console.log('🔑 Using token:', token.substring(0, 20) + '...');
 
       const response = await fetch('http://localhost:5000/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.user.token}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(orderData),
       });
@@ -98,10 +131,12 @@ export default function CheckoutPage() {
       console.log('📡 Response status:', response.status);
       
       const data = await response.json();
-      console.log('📥 Response data:', data);
+      console.log('📄 Response data:', data);
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to place order');
+        const errorMessage = data.message || `Failed to place order: ${response.status}`;
+        console.error('❌ Order creation failed:', errorMessage);
+        throw new Error(errorMessage);
       }
 
       console.log('✅ Order placed successfully!');
@@ -126,8 +161,8 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Order Items */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 shadow-xl rounded-lg p-6 border border-slate-700">
+                <h2 className="text-xl font-semibold text-white mb-4">
                   Order from {canteenName}
                 </h2>
                 <div className="space-y-3">
@@ -158,13 +193,13 @@ export default function CheckoutPage() {
               </div>
 
               {/* Payment Method */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 shadow-xl rounded-lg p-6 border border-slate-700">
+                <h2 className="text-xl font-semibold text-white mb-4">
                   Payment Method
                 </h2>
                 <div className="space-y-2">
                   {['cash', 'card', 'upi', 'wallet'].map((method) => (
-                    <label key={method} className="flex items-center">
+                    <label key={method} className="flex items-center text-gray-300 hover:text-white cursor-pointer">
                       <input
                         type="radio"
                         name="paymentMethod"
@@ -173,7 +208,7 @@ export default function CheckoutPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, paymentMethod: e.target.value })
                         }
-                        className="mr-2"
+                        className="mr-2 accent-orange-500"
                       />
                       <span className="capitalize">{method}</span>
                     </label>
@@ -182,13 +217,13 @@ export default function CheckoutPage() {
               </div>
 
               {/* Delivery Type */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 shadow-xl rounded-lg p-6 border border-slate-700">
+                <h2 className="text-xl font-semibold text-white mb-4">
                   Delivery Type
                 </h2>
                 <div className="space-y-2">
                   {['pickup', 'delivery'].map((type) => (
-                    <label key={type} className="flex items-center">
+                    <label key={type} className="flex items-center text-gray-300 hover:text-white cursor-pointer">
                       <input
                         type="radio"
                         name="deliveryType"
@@ -197,7 +232,7 @@ export default function CheckoutPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, deliveryType: e.target.value })
                         }
-                        className="mr-2"
+                        className="mr-2 accent-orange-500"
                       />
                       <span className="capitalize">{type}</span>
                     </label>
@@ -206,8 +241,8 @@ export default function CheckoutPage() {
               </div>
 
               {/* Special Requests */}
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 shadow-xl rounded-lg p-6 border border-slate-700">
+                <h2 className="text-xl font-semibold text-white mb-4">
                   Special Requests
                 </h2>
                 <textarea

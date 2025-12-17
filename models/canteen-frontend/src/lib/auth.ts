@@ -11,6 +11,8 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
+          console.log('🔐 [NextAuth] Attempting login for:', credentials?.email);
+          
           const response = await fetch('http://localhost:5000/api/auth/login', {
             method: 'POST',
             headers: {
@@ -22,11 +24,21 @@ export const authOptions: NextAuthOptions = {
             }),
           });
 
+          console.log('📡 [NextAuth] Backend response status:', response.status);
+
           if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('❌ [NextAuth] Login failed:', errorData);
             return null;
           }
 
           const data = await response.json();
+          console.log('✅ [NextAuth] Login successful:', { 
+            userId: data.user?.id || data.user?._id, 
+            role: data.user?.role,
+            hasToken: !!data.token 
+          });
+          
           const user = data.user;
 
           return {
@@ -38,6 +50,7 @@ export const authOptions: NextAuthOptions = {
             canteenId: user.canteenId,
           };
         } catch (error) {
+          console.error('💥 [NextAuth] Exception during login:', error);
           return null;
         }
       }

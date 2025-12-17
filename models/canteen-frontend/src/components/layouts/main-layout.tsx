@@ -2,6 +2,7 @@
 
 import { PropsWithChildren } from 'react';
 import Navbar from './navbar-new';
+import { FloatingCartButton } from '../FloatingCartButton';
 
 export function MainLayout({ children }: PropsWithChildren) {
   return (
@@ -10,6 +11,7 @@ export function MainLayout({ children }: PropsWithChildren) {
       <main className="container mx-auto px-4 py-8">
         {children}
       </main>
+      <FloatingCartButton />
     </div>
   );
 }

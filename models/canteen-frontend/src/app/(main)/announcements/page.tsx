@@ -129,7 +129,13 @@ export default function AnnouncementsPage() {
             animate="visible"
           >
             {filteredAnnouncements.map((announcement) => (
-              <motion.div key={announcement._id} variants={animations.itemVariants}>
+              <motion.div 
+                key={announcement._id}
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4 }}
+              >
                 <Link
                   href={`/canteens/${announcement.canteen._id}`}
                   className="block group h-full"
@@ -139,59 +145,60 @@ export default function AnnouncementsPage() {
                     announcement.priority === 'medium' ? 'border-l-yellow-500 shadow-lg shadow-yellow-500/20' :
                     'border-l-green-500 shadow-lg shadow-green-500/20'
                   }`}>
-                  {announcement.image && (
-                    <div className="h-48 overflow-hidden">
-                      <img
-                        src={announcement.image}
-                        alt={announcement.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-2xl">{getTypeIcon(announcement.type)}</span>
-                      <span className="text-sm font-medium text-indigo-600 capitalize">
-                        {announcement.type.replace('_', ' ')}
-                      </span>
-                      <span className={`ml-auto px-2 py-1 rounded text-xs font-semibold ${
-                        announcement.priority === 'high' ? 'bg-red-900/30 text-red-300' :
-                        announcement.priority === 'medium' ? 'bg-yellow-900/30 text-yellow-300' :
-                        'bg-green-900/30 text-green-300'
-                      }`}>
-                        {announcement.priority.toUpperCase()}
-                      </span>
-                    </div>
-                    
-                    <h3 className={`text-lg font-bold ${themeClasses.textPrimary} mb-2 group-hover:text-blue-400 transition-colors`}>
-                      {announcement.title}
-                    </h3>
-                    
-                    <p className={`text-sm ${themeClasses.textSecondary} mb-4 line-clamp-3`}>
-                      {announcement.description}
-                    </p>
-
-                    {(announcement.startDate || announcement.endDate) && (
-                      <div className={`text-xs ${themeClasses.textMuted} mb-3 space-y-1`}>
-                        {announcement.startDate && (
-                          <div>📅 Start: {new Date(announcement.startDate).toLocaleDateString()}</div>
-                        )}
-                        {announcement.endDate && (
-                          <div>⏰ End: {new Date(announcement.endDate).toLocaleDateString()}</div>
-                        )}
+                    {announcement.image && (
+                      <div className="h-48 overflow-hidden">
+                        <img
+                          src={announcement.image}
+                          alt={announcement.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
                       </div>
                     )}
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-2xl">{getTypeIcon(announcement.type)}</span>
+                        <span className="text-sm font-medium text-indigo-600 capitalize">
+                          {announcement.type.replace('_', ' ')}
+                        </span>
+                        <span className={`ml-auto px-2 py-1 rounded text-xs font-semibold ${
+                          announcement.priority === 'high' ? 'bg-red-900/30 text-red-300' :
+                          announcement.priority === 'medium' ? 'bg-yellow-900/30 text-yellow-300' :
+                          'bg-green-900/30 text-green-300'
+                        }`}>
+                          {announcement.priority.toUpperCase()}
+                        </span>
+                      </div>
+                      
+                      <h3 className={`text-lg font-bold ${themeClasses.textPrimary} mb-2 group-hover:text-blue-400 transition-colors`}>
+                        {announcement.title}
+                      </h3>
+                      
+                      <p className={`text-sm ${themeClasses.textSecondary} mb-4 line-clamp-3`}>
+                        {announcement.description}
+                      </p>
 
-                    <div className={`flex items-center justify-between text-sm pt-3 border-t ${themeClasses.border}`}>
-                      <span className={`${themeClasses.textMuted} flex items-center gap-1`}>
-                        📍 {announcement.canteen.name}
-                      </span>
-                      <span className="text-blue-400 font-medium group-hover:underline flex items-center gap-1">
-                        Visit Canteen
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </span>
+                      {(announcement.startDate || announcement.endDate) && (
+                        <div className={`text-xs ${themeClasses.textMuted} mb-3 space-y-1`}>
+                          {announcement.startDate && (
+                            <div>📅 Start: {new Date(announcement.startDate).toLocaleDateString()}</div>
+                          )}
+                          {announcement.endDate && (
+                            <div>⏰ End: {new Date(announcement.endDate).toLocaleDateString()}</div>
+                          )}
+                        </div>
+                      )}
+
+                      <div className={`flex items-center justify-between text-sm pt-3 border-t ${themeClasses.border}`}>
+                        <span className={`${themeClasses.textMuted} flex items-center gap-1`}>
+                          📍 {announcement.canteen.name}
+                        </span>
+                        <span className="text-blue-400 font-medium group-hover:underline flex items-center gap-1">
+                          Visit Canteen
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </Link>
