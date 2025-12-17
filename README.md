@@ -1,74 +1,200 @@
-# Canteen Management System
+# 🍽️ Canteen Management System
 
-A full-stack application for managing university canteens, orders, and menus.
+A comprehensive full-stack application for managing college canteens with real-time order tracking, ML-powered recommendations, and analytics.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/divyansh-tech-news-projects/v0-canteen-management-backend)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/IpXRWPKkA2G)
+## ✨ Features
 
-## Features
+- 🔐 **User Authentication** - JWT-based auth with role management (Student, Owner, Admin)
+- 🏪 **Canteen Management** - Create and manage multiple canteens with custom menus
+- 🍕 **Dish Management** - Add dishes with images, pricing, and availability
+- 📦 **Order System** - Real-time order placement, tracking, and status updates
+- ⭐ **Reviews & Ratings** - Student feedback with sentiment analysis
+- 📊 **Analytics Dashboard** - Revenue tracking, popular dishes, and insights
+- 🤖 **ML Features** - Personalized recommendations and demand forecasting
+- 🔔 **Real-time Notifications** - Socket.IO for live updates
+- 📱 **Responsive Design** - Works on desktop and mobile devices
 
-- User authentication and authorization
-- Canteen management and menu creation
-- Order placement and tracking
-- Reviews and ratings system
-- Admin dashboard for analytics
+## 🛠️ Technology Stack
 
-## Technology Stack
+### Backend
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: MongoDB Atlas
+- **Authentication**: JWT (jsonwebtoken)
+- **Real-time**: Socket.IO
+- **Image Upload**: Cloudinary
+- **ML Service**: Python Flask (optional)
 
-- Backend: Node.js, Express.js, MongoDB
-- Frontend: Next.js 13, TypeScript, Tailwind CSS
-- Authentication: JWT, NextAuth.js
+### Frontend
+- **Framework**: Next.js 13 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **State Management**: React Context
+- **HTTP Client**: Axios
+- **Real-time**: Socket.IO Client
 
-## Getting Started
+## 📁 Project Structure
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd canteen-management-system
-   ```
+```
+Canteen_project/
+├── server.js              # Backend entry point
+├── package.json           # Backend dependencies
+├── render.yaml           # Render deployment config
+├── config/               # Database & Cloudinary config
+├── controllers/          # Route controllers
+├── middleware/           # Auth & validation middleware
+├── models/               # MongoDB schemas
+│   └── canteen-frontend/ # Frontend Next.js app
+│       ├── vercel.json   # Vercel deployment config
+│       └── src/          # Frontend source code
+├── routes/               # API routes
+├── ml-service/          # Python ML service (optional)
+└── scripts/             # Database seed & utility scripts
+```
 
-2. Install dependencies:
-   ```bash
-   # Install backend dependencies
-   npm install
-   
-   # Install frontend dependencies
-   cd models/canteen-frontend
-   npm install
-   ```
+## 🚀 Quick Start (Local Development)
 
-3. Set up environment variables:
-   Create a `.env` file in the root directory with:
-   ```
-   PORT=3001
-   MONGODB_URI=your_mongodb_uri
-   JWT_SECRET=your_jwt_secret
-   ```
+### Prerequisites
+- Node.js 16+ and pnpm
+- MongoDB Atlas account
+- Cloudinary account (for image uploads)
 
-4. Run the development servers:
-   ```bash
-   # Start backend (from root directory)
-   npm run dev
+### 1. Clone Repository
+```bash
+git clone https://github.com/cooper235/Canteen_project.git
+cd Canteen_project
+```
 
-   # Start frontend (from models/canteen-frontend)
-   npm run dev
-   ```
+### 2. Install Dependencies
+```bash
+# Backend
+pnpm install
 
-## API Documentation
+# Frontend
+cd models/canteen-frontend
+pnpm install
+cd ../..
+```
 
-Your project is live at:
+### 3. Environment Setup
 
-**[https://vercel.com/divyansh-tech-news-projects/v0-canteen-management-backend](https://vercel.com/divyansh-tech-news-projects/v0-canteen-management-backend)**
+Create `.env` in root directory:
+```env
+PORT=5000
+NODE_ENV=development
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+JWT_EXPIRE=7d
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+FRONTEND_URL=http://localhost:3000
+ML_SERVICE_URL=http://localhost:5001
+```
 
-## Build your app
+Create `.env.local` in `models/canteen-frontend/`:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
+```
 
-Continue building your app on:
+### 4. Run Development Servers
 
-**[https://v0.app/chat/projects/IpXRWPKkA2G](https://v0.app/chat/projects/IpXRWPKkA2G)**
+**Backend:**
+```bash
+node server.js
+# Runs on http://localhost:5000
+```
 
-## How It Works
+**Frontend:**
+```bash
+cd models/canteen-frontend
+pnpm dev
+# Runs on http://localhost:3000
+```
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+## 🌐 Deployment
+
+For detailed deployment instructions, see **[DEPLOYMENT.md](./DEPLOYMENT.md)**
+
+### Quick Deploy Summary:
+
+**Backend → Render.com**
+- Free tier available
+- Auto-deploys from GitHub
+- Set environment variables in dashboard
+
+**Frontend → Vercel.com**
+- Free tier with generous limits
+- Auto-deploys from GitHub
+- Set `NEXT_PUBLIC_*` environment variables
+
+## 📚 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - User login
+- `GET /api/auth/me` - Get current user
+
+### Canteens
+- `GET /api/canteens` - List all canteens
+- `POST /api/canteens` - Create canteen (Owner)
+- `GET /api/canteens/:id` - Get canteen details
+- `PUT /api/canteens/:id` - Update canteen (Owner)
+
+### Dishes
+- `GET /api/dishes` - List dishes
+- `POST /api/dishes` - Create dish (Owner)
+- `PUT /api/dishes/:id` - Update dish (Owner)
+- `DELETE /api/dishes/:id` - Delete dish (Owner)
+
+### Orders
+- `POST /api/orders` - Place order (Student)
+- `GET /api/orders` - Get user orders
+- `PUT /api/orders/:id/status` - Update order status (Owner)
+
+### Reviews
+- `POST /api/reviews` - Create review (Student)
+- `GET /api/reviews/dish/:id` - Get dish reviews
+
+For complete API documentation, test the endpoints at:
+```
+http://localhost:5000/api/health
+```
+
+## 🧪 Testing
+
+```bash
+# Check backend API
+curl http://localhost:5000/api/health
+
+# Run database scripts
+node scripts/seedCanteens.js
+node scripts/populate-dummy-data.js
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For deployment help, see [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+For issues, please open a GitHub issue.
+
+## 👥 Authors
+
+- **Cooper235** - [GitHub](https://github.com/cooper235)
+
+---
+
+**⭐ Star this repo if you find it useful!**

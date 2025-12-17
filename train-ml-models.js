@@ -34,7 +34,8 @@ async function trainModels() {
 
     // Call ML service training endpoint
     console.log('🤖 Training recommendation model...');
-    const trainResponse = await fetch('http://localhost:5001/api/recommendations/train', {
+    const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
+    const trainResponse = await fetch(`${ML_SERVICE_URL}/api/recommendations/train`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

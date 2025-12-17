@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { UserPlus, Eye, EyeOff } from 'lucide-react';
-import { themeClasses, animations } from '@/lib/theme';
+import { API_URL } from '@/lib/config';
 
 type RegisterFormData = {
   name: string;
@@ -30,7 +30,7 @@ export default function RegisterPage() {
     try {
       setError('');
       
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

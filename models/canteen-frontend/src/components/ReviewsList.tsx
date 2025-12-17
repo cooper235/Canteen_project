@@ -38,7 +38,7 @@ export default function ReviewsList({ dishId, refreshTrigger }: ReviewsListProps
   const fetchReviews = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/reviews/dish/${dishId}?sortBy=${sortBy}`
+        `/reviews/dish/${dishId}?sortBy=${sortBy}`
       );
       const data = await response.json();
       

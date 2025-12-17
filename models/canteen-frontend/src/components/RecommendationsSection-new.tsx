@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Star, Zap, TrendingUp } from 'lucide-react';
+import { API_URL } from '@/lib/config';
 
 interface Recommendation {
   dish_id: string;
@@ -77,7 +78,7 @@ export default function RecommendationsSection() {
         setLoading(true);
 
         const response = await fetch(
-          `http://localhost:5000/api/ml/recommendations/user/${userEmail}?limit=6`,
+          `${API_URL}/ml/recommendations/user/${userEmail}?limit=6`,
           {
             method: 'GET',
             headers: {
@@ -99,7 +100,7 @@ export default function RecommendationsSection() {
             try {
               console.log(`Fetching dish ${rec.dish_id}...`);
               const dishResponse = await fetch(
-                `http://localhost:5000/api/dishes/${rec.dish_id}`,
+                `${API_URL}/dishes/${rec.dish_id}`,
                 {
                   headers: {
                     'Authorization': `Bearer ${token}`,

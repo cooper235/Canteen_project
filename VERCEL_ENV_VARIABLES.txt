@@ -1,0 +1,4 @@
+NEXT_PUBLIC_API_URL=https://canteen-project-mnk6.onrender.com/api
+NEXT_PUBLIC_SOCKET_URL=https://canteen-project-mnk6.onrender.com
+NEXTAUTH_URL=https://canteen-project-pani.vercel.app
+NEXTAUTH_SECRET=N7v$2pQ8xZ!rL9mT4wB#fK1uH6eG0sY5

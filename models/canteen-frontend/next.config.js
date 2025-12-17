@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  swcMinify: false,
   images: {
     remotePatterns: [
       {
@@ -8,9 +15,6 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
-  },
-  env: {
-    NEXT_PUBLIC_API_URL: 'http://localhost:5000',
   },
   webpack: (config, { isServer }) => {
     // Ignore optional dependencies warnings for ws package

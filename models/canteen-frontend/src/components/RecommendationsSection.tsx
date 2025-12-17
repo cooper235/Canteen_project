@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { API_URL } from '@/lib/config';
 
 interface Recommendation {
   dish_id: string;
@@ -53,7 +54,7 @@ export default function RecommendationsSection() {
         
         // Get recommendations from backend API using user email
         const response = await fetch(
-          `http://localhost:5000/api/ml/recommendations/user/${userEmail}?limit=6`,
+          `${API_URL}/ml/recommendations/user/${userEmail}?limit=6`,
           {
             method: 'GET',
             headers: {
@@ -76,7 +77,7 @@ export default function RecommendationsSection() {
             try {
               console.log(`Fetching dish ${rec.dish_id}...`);
               const dishResponse = await fetch(
-                `http://localhost:5000/api/dishes/${rec.dish_id}`,
+                `${API_URL}/dishes/${rec.dish_id}`,
                 {
                   headers: {
                     'Authorization': `Bearer ${token}`
@@ -123,14 +124,14 @@ export default function RecommendationsSection() {
 
   if (!session?.user?.id || loading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-2xl font-bold mb-4">🤖 Recommended for You</h2>
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg shadow-md p-6 mb-8 border border-slate-700">
+        <h2 className="text-2xl font-bold mb-4 text-white">✨ Recommended for You</h2>
         <div className="flex space-x-4 overflow-x-auto">
           {[1, 2, 3].map(i => (
             <div key={i} className="w-64 flex-shrink-0">
-              <div className="animate-pulse bg-gray-200 h-40 rounded-lg mb-2"></div>
-              <div className="animate-pulse bg-gray-200 h-4 rounded w-3/4 mb-2"></div>
-              <div className="animate-pulse bg-gray-200 h-4 rounded w-1/2"></div>
+              <div className="animate-pulse bg-slate-700 h-40 rounded-lg mb-2"></div>
+              <div className="animate-pulse bg-slate-700 h-4 rounded w-3/4 mb-2"></div>
+              <div className="animate-pulse bg-slate-700 h-4 rounded w-1/2"></div>
             </div>
           ))}
         </div>
@@ -140,9 +141,9 @@ export default function RecommendationsSection() {
 
   if (dishes.length === 0) {
     return (
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md p-6 mb-8 border border-blue-100">
-        <h2 className="text-2xl font-bold mb-2 text-indigo-900">🤖 Personalized Recommendations</h2>
-        <p className="text-gray-600">
+      <div className="bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-sm rounded-lg shadow-md p-6 mb-8 border border-orange-500/30">
+        <h2 className="text-2xl font-bold mb-2 text-white">✨ Personalized Recommendations</h2>
+        <p className="text-gray-300">
           Order some dishes to get personalized recommendations powered by AI!
         </p>
       </div>
@@ -150,14 +151,14 @@ export default function RecommendationsSection() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md p-6 mb-8 border border-blue-100">
+    <div className="bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-sm rounded-lg shadow-md p-6 mb-8 border border-orange-500/30">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-indigo-900">🤖 Recommended for You</h2>
-          <p className="text-sm text-gray-600">AI-powered suggestions based on your preferences</p>
+          <h2 className="text-2xl font-bold text-white">✨ Recommended for You</h2>
+          <p className="text-sm text-gray-300">AI-powered suggestions based on your preferences</p>
         </div>
-        <div className="bg-indigo-100 px-3 py-1 rounded-full">
-          <span className="text-indigo-700 text-sm font-medium">ML Powered</span>
+        <div className="bg-orange-500/20 px-3 py-1 rounded-full border border-orange-500/30">
+          <span className="text-orange-300 text-sm font-medium">ML Powered</span>
         </div>
       </div>
 
@@ -175,10 +176,10 @@ export default function RecommendationsSection() {
             <Link
               key={dish._id}
               href={`/canteens/${dish.canteen._id || dish.canteen}`}
-              className="w-72 flex-shrink-0 bg-white rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200"
+              className="w-72 flex-shrink-0 bg-slate-700/50 backdrop-blur-sm rounded-lg shadow hover:shadow-lg hover:shadow-orange-500/20 transition-all border border-slate-600 hover:border-orange-500/50"
             >
               {/* Dish Image */}
-              <div className="relative h-48 bg-gray-100 rounded-t-lg overflow-hidden">
+              <div className="relative h-48 bg-slate-800 rounded-t-lg overflow-hidden">
                 {dish.image ? (
                   <img
                     src={dish.image}

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { themeClasses, animations } from '@/lib/theme';
+import { API_URL } from '@/lib/config';
 
 export default function CheckoutPage() {
   const { items, getTotal, clearCart } = useCart();
@@ -85,7 +85,7 @@ export default function CheckoutPage() {
 
       console.log('📦 Order data:', orderData);
 
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

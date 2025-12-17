@@ -2,6 +2,7 @@
 node_modules/
 /.pnp
 .pnp.js
+pnpm-lock.yaml
 
 # Testing
 /coverage
@@ -12,6 +13,8 @@ node_modules/
 
 # Environment files
 .env
+.env.*
+!.env.example
 .env.local
 .env.development.local
 .env.test.local
@@ -21,6 +24,7 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
 # IDE and editor files
 .idea/
@@ -38,3 +42,35 @@ out/
 
 # Vercel
 .vercel
+
+# Documentation files (keep only README.md)
+*_GUIDE.md
+*_DOCUMENTATION.md
+*_TESTING.md
+*_IMPLEMENTATION.md
+*_COMPLETE.md
+*_PROCEDURE.md
+*_SUMMARY.md
+*_REFERENCE.md
+DEPLOY_*.md
+FRONTEND_*.md
+BACKEND_*.md
+ML_*.md
+SETUP_*.md
+TESTING_*.md
+INTEGRATION_*.md
+LOCAL_*.md
+API_DOCUMENTATION.md
+
+# ML models and cache
+ml-service/models/*.pkl
+ml-service/models/*.joblib
+ml-service/__pycache__/
+ml-service/**/__pycache__/
+
+# Test and script files
+test-*.ps1
+test-*.sh
+START_*.ps1
+TEST_*.ps1
+check-*.js

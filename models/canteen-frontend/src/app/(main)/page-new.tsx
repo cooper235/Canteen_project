@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { Star, MapPin, Clock, Zap, Heart, Search, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import RecommendationsSection from '@/components/RecommendationsSection';
+import { API_URL } from '@/lib/config';
 
 interface Canteen {
   _id: string;
@@ -64,7 +64,7 @@ export default function HomePage() {
       try {
         setLoading(true);
         console.log('🔄 Fetching canteens...');
-        const response = await fetch('http://localhost:5000/api/canteens');
+        const response = await fetch(`${API_URL}/canteens`);
         console.log('✅ Response status:', response.status);
 
         if (!response.ok) {

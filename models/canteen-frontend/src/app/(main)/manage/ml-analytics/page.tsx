@@ -3,10 +3,8 @@
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
 import ForecastingDashboard from '@/components/ForecastingDashboard';
-import SentimentAnalysis from '@/components/SentimentAnalysis';
-import { themeClasses, animations } from '@/lib/theme';
+import { API_URL } from '@/lib/config';
 
 interface Canteen {
   _id: string;
@@ -34,7 +32,7 @@ export default function MLAnalyticsPage() {
 
     const fetchCanteen = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/canteens/my-canteen', {
+        const response = await fetch(`${API_URL}/canteens/my-canteen`, {
           credentials: 'include',
         });
 
@@ -56,50 +54,50 @@ export default function MLAnalyticsPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className={`min-h-screen ${themeClasses.background} flex items-center justify-center`}>
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
 
   if (!canteen) {
     return (
-      <div className={`min-h-screen ${themeClasses.background} flex items-center justify-center`}>
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className={`text-2xl font-bold ${themeClasses.textPrimary} mb-2`}>No Canteen Found</h2>
-          <p className={themeClasses.textSecondary}>You need to register a canteen first.</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">No Canteen Found</h2>
+          <p className="text-gray-600">You need to register a canteen first.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen ${themeClasses.background}`}>
-      <motion.div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <motion.div className="mb-8" initial={{ y: -20 }} animate={{ y: 0 }}>
+        <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className={`text-3xl font-bold ${themeClasses.textPrimary}`}>🤖 ML Analytics</h1>
-              <p className={`mt-2 ${themeClasses.textSecondary}`}>
+              <h1 className="text-3xl font-bold text-gray-900">📊 ML Analytics</h1>
+              <p className="mt-2 text-gray-600">
                 AI-powered insights for <span className="font-semibold">{canteen.name}</span>
               </p>
             </div>
-            <span className="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-lg text-sm font-medium shadow-lg">
+            <span className="px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg text-sm font-medium shadow-lg">
               Powered by AI/ML
             </span>
           </div>
-        </motion.div>
+        </div>
 
         {/* Tab Navigation */}
-        <div className={`mb-6 border-b ${themeClasses.border}`}>
+        <div className="mb-6 border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
             <button
               onClick={() => setActiveTab('forecasting')}
               className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === 'forecasting'
-                  ? `border-blue-500 ${themeClasses.textPrimary}`
-                  : `border-transparent ${themeClasses.textSecondary} hover:${themeClasses.textPrimary}`
+                  ? 'border-purple-500 text-purple-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               📈 Demand Forecasting
@@ -108,7 +106,7 @@ export default function MLAnalyticsPage() {
               onClick={() => setActiveTab('sentiment')}
               className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === 'sentiment'
-                  ? 'border-orange-500 text-orange-600'
+                  ? 'border-purple-500 text-purple-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >

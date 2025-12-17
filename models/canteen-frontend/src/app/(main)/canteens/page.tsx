@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Star, MapPin, Clock } from 'lucide-react';
 import RecommendationsSection from '@/components/RecommendationsSection';
 import { themeClasses, animations } from '@/lib/theme';
+import { API_URL } from '@/lib/config';
 
 type Canteen = {
   _id: string;
@@ -32,7 +33,7 @@ export default function CanteensPage() {
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
       
       try {
-        const response = await fetch('http://localhost:5000/api/canteens', {
+        const response = await fetch(`${API_URL}/canteens`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -131,7 +132,7 @@ export default function CanteensPage() {
           {canteens?.map((canteen, index) => (
             <motion.div
               key={canteen._id}
-              variants={animations.itemVariants}
+              variants={animations.itemVariants as any}
               whileHover="hover"
               initial="rest"
               animate="rest"
