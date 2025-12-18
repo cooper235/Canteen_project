@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { UserPlus, Eye, EyeOff } from 'lucide-react';
 import { API_URL } from '@/lib/config';
+import { themeClasses } from '@/lib/theme';
 
 type RegisterFormData = {
   name: string;
@@ -29,7 +30,7 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       setError('');
-      
+
       const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
@@ -37,9 +38,9 @@ export default function RegisterPage() {
         },
         body: JSON.stringify(data),
       });
-      
+
       const responseData = await response.json();
-      
+
       if (response.ok && responseData.success) {
         // Store token if provided
         if (responseData.token) {
