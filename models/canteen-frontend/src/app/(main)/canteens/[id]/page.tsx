@@ -168,12 +168,18 @@ export default function CanteenDetailsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Canteen Header */}
         <div className="bg-white/[0.08] backdrop-blur-sm rounded-2xl border border-white/10 shadow-2xl shadow-orange-500/20 overflow-hidden">
-          <div className="h-64 bg-gradient-to-br from-orange-500 to-amber-600">
-            {canteen?.image && (
+          <div className="h-64 bg-gradient-to-br from-orange-500 to-amber-600 relative overflow-hidden">
+            {canteen?.image ? (
               <img
                 src={canteen.image}
                 alt={canteen.name}
                 className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&h=400&fit=crop&q=85"
+                alt="Canteen"
+                className="w-full h-full object-cover opacity-80"
               />
             )}
           </div>
@@ -248,8 +254,8 @@ export default function CanteenDetailsPage() {
                   key={category}
                   onClick={() => setFilterCategory(category)}
                   className={`px-4 py-2 rounded-lg capitalize transition-all duration-300 ${filterCategory === category
-                      ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30'
-                      : 'bg-white/[0.08] text-slate-300 hover:bg-white/[0.12] border border-white/10'
+                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30'
+                    : 'bg-white/[0.08] text-slate-300 hover:bg-white/[0.12] border border-white/10'
                     }`}
                 >
                   {category}
@@ -366,8 +372,8 @@ export default function CanteenDetailsPage() {
                   <div className="mt-4 flex items-center justify-between text-sm">
                     <span
                       className={`px-2 py-1 rounded font-medium ${dish.availability
-                          ? 'bg-green-500/20 text-green-300 border border-green-500/30'
-                          : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                        ? 'bg-green-500/20 text-green-300 border border-green-500/30'
+                        : 'bg-red-500/20 text-red-300 border border-red-500/30'
                         }`}
                     >
                       {dish.availability ? '✓ Available' : '✗ Unavailable'}

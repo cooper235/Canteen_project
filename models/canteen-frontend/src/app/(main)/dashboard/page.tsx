@@ -4,6 +4,15 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import {
+  Store,
+  ShoppingBag,
+  Settings,
+  TrendingUp,
+  Activity,
+  Sparkles
+} from 'lucide-react';
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
@@ -17,10 +26,10 @@ export default function DashboardPage() {
 
   if (status === 'loading') {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-slate-300 font-medium">Loading...</p>
         </div>
       </div>
     );
@@ -32,157 +41,147 @@ export default function DashboardPage() {
 
   const user = session.user as any;
 
+  const quickActions = [
+    {
+      href: '/canteens',
+      icon: Store,
+      title: 'Browse Canteens',
+      description: 'Explore campus canteens',
+      gradient: 'from-orange-500 to-amber-500',
+      iconColor: 'text-orange-400',
+    },
+    {
+      href: '/orders',
+      icon: ShoppingBag,
+      title: 'My Orders',
+      description: 'View order history',
+      gradient: 'from-green-500 to-emerald-500',
+      iconColor: 'text-green-400',
+    },
+  ];
+
+  if (user.role === 'canteen_owner') {
+    quickActions.push({
+      href: '/manage',
+      icon: Settings,
+      title: 'Manage Canteen',
+      description: 'Update menu & settings',
+      gradient: 'from-purple-500 to-pink-500',
+      iconColor: 'text-purple-400',
+    });
+  }
+
   return (
-    <div className="py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-        {/* Welcome Section */}
-        <div className="py-4">
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-2">
-                Welcome back, {user.name}!
-              </h2>
-              <p className="text-sm text-gray-500">
-                Role: <span className="font-medium text-gray-900">{user.role}</span>
-              </p>
-              <p className="text-sm text-gray-500">
-                Email: <span className="font-medium text-gray-900">{user.email}</span>
-              </p>
+    <div className="min-h-screen py-12 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Page Header */}
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-2">
+            Dashboard
+          </h1>
+          <p className="text-slate-400">Welcome back to your food hub</p>
+        </motion.div>
+
+        {/* Welcome Card */}
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-orange-500/10 backdrop-blur-xl rounded-3xl border border-orange-500/20 p-8 shadow-2xl shadow-orange-500/10">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-amber-400 flex items-center justify-center text-2xl font-black text-white shadow-lg">
+                {user.name?.charAt(0) || 'U'}
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-1 flex items-center gap-2">
+                  Welcome back, {user.name}!
+                  <Sparkles className="text-amber-400" size={24} />
+                </h2>
+                <div className="flex items-center gap-4 text-sm text-slate-300">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30 font-semibold">
+                    {user.role === 'canteen_owner' ? '🏪 Canteen Owner' : '🎓 Student'}
+                  </span>
+                  <span className="text-slate-400">{user.email}</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Quick Actions */}
-        <div className="mt-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Browse Canteens */}
-            <Link href="/canteens">
-              <div className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow cursor-pointer">
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <svg
-                        className="h-6 w-6 text-indigo-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                        />
-                      </svg>
-                    </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">
-                          Browse Canteens
-                        </dt>
-                        <dd className="text-xs text-gray-400 mt-1">
-                          Explore campus canteens
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* My Orders */}
-            <Link href="/orders">
-              <div className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow cursor-pointer">
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <svg
-                        className="h-6 w-6 text-green-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                        />
-                      </svg>
-                    </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">
-                          My Orders
-                        </dt>
-                        <dd className="text-xs text-gray-400 mt-1">
-                          View order history
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Canteen Owner Actions */}
-            {user.role === 'canteen_owner' && (
-              <Link href="/canteens">
-                <div className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow cursor-pointer">
-                  <div className="p-5">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        <svg
-                          className="h-6 w-6 text-orange-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                        </svg>
+        <div className="mb-12">
+          <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <TrendingUp className="text-orange-400" size={28} />
+            Quick Actions
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {quickActions.map((action, index) => {
+              const Icon = action.icon;
+              return (
+                <motion.div
+                  key={action.href}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 + index * 0.05 }}
+                >
+                  <Link href={action.href}>
+                    <motion.div
+                      className="bg-white/[0.08] backdrop-blur-xl rounded-2xl border border-white/10 hover:border-orange-500/50 p-6 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 cursor-pointer group"
+                      whileHover={{ scale: 1.03, y: -8 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+                        <Icon size={28} className="text-white" />
                       </div>
-                      <div className="ml-5 w-0 flex-1">
-                        <dl>
-                          <dt className="text-sm font-medium text-gray-500 truncate">
-                            Manage Canteen
-                          </dt>
-                          <dd className="text-xs text-gray-400 mt-1">
-                            Update menu & settings
-                          </dd>
-                        </dl>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            )}
+                      <h4 className="text-lg font-bold text-white mb-2 group-hover:text-orange-400 transition">
+                        {action.title}
+                      </h4>
+                      <p className="text-sm text-slate-400">
+                        {action.description}
+                      </p>
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Recent Activity placeholder */}
-        <div className="mt-8">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
-          <div className="bg-white shadow overflow-hidden sm:rounded-md">
-            <div className="px-4 py-5 sm:p-6 text-center text-gray-500">
-              <p>No recent activity to display</p>
+        {/* Recent Activity */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <Activity className="text-orange-400" size={28} />
+            Recent Activity
+          </h3>
+          <div className="bg-white/[0.08] backdrop-blur-xl rounded-3xl border border-white/10 p-8 shadow-2xl text-center">
+            <div className="text-slate-500 mb-2">
+              <Activity size={48} className="mx-auto opacity-40" />
             </div>
+            <p className="text-slate-400 font-medium">No recent activity to display</p>
+            <p className="text-sm text-slate-500 mt-2">
+              Start browsing canteens to see your activity here
+            </p>
+            <Link href="/canteens">
+              <motion.button
+                className="mt-6 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-orange-500/30 transition"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Browse Canteens
+              </motion.button>
+            </Link>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
