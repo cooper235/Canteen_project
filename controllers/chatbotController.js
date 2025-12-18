@@ -2,8 +2,13 @@ import axios from 'axios';
 import Canteen from '../models/Canteen.js';
 import Dish from '../models/Dish.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyAIYDdcNfHAoWbH7_x2n3URuiGQz4vQLMU';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+
+// Validate API key is set
+if (!GEMINI_API_KEY) {
+    console.error('⚠️  GEMINI_API_KEY is not set in environment variables. Chatbot will not work.');
+}
 
 // In-memory conversation history (in production, use Redis or database)
 const conversationHistory = new Map();
