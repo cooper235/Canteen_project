@@ -327,6 +327,8 @@ cd ../..
 
 #### **Backend Environment (.env in root)**
 
+> ⚠️ **SECURITY WARNING**: The values below are **EXAMPLES ONLY**. Replace ALL placeholder values with your actual credentials. Never commit your `.env` file to Git!
+
 Create a `.env` file in the root directory:
 
 ```env
@@ -334,17 +336,17 @@ Create a `.env` file in the root directory:
 PORT=5000
 NODE_ENV=development
 
-# Database
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/canteen-db
+# Database - REPLACE WITH YOUR ACTUAL MONGODB URI
+MONGODB_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/YOUR_DATABASE_NAME
 
-# JWT Authentication
-JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+# JWT Authentication - REPLACE WITH A STRONG RANDOM SECRET
+JWT_SECRET=REPLACE_THIS_WITH_A_STRONG_RANDOM_SECRET_KEY_AT_LEAST_32_CHARACTERS
 JWT_EXPIRE=7d
 
-# Cloudinary (for image uploads)
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+# Cloudinary (for image uploads) - REPLACE WITH YOUR CLOUDINARY CREDENTIALS
+CLOUDINARY_CLOUD_NAME=YOUR_CLOUDINARY_CLOUD_NAME
+CLOUDINARY_API_KEY=YOUR_CLOUDINARY_API_KEY
+CLOUDINARY_API_SECRET=YOUR_CLOUDINARY_API_SECRET
 
 # Frontend URL (for CORS)
 FRONTEND_URL=http://localhost:3000
@@ -358,6 +360,8 @@ URLENCODE_LIMIT=10mb
 ```
 
 > 📘 **Tip**: See [COMPLETE_ENV_GUIDE.md](./COMPLETE_ENV_GUIDE.md) for detailed environment variable documentation.
+> 
+> 🔒 **Security Best Practice**: Generate a strong JWT secret using: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
 
 #### **Frontend Environment (.env.local in models/canteen-frontend/)**
 
