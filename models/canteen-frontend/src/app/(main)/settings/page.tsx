@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Phone, Lock, Save } from 'lucide-react';
+import { API_URL } from '@/lib/config';
 
 export default function SettingsPage() {
   const { data: session, update } = useSession();
@@ -28,7 +29,7 @@ export default function SettingsPage() {
     setMessage(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/profile', {
+      const response = await fetch(`${API_URL}/users/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +66,7 @@ export default function SettingsPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/password', {
+      const response = await fetch(`${API_URL}/users/password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -120,11 +121,10 @@ export default function SettingsPage() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`mb-6 p-4 rounded-lg border ${
-                message.type === 'success'
+              className={`mb-6 p-4 rounded-lg border ${message.type === 'success'
                   ? 'bg-green-500/20 border-green-500/50 text-green-300'
                   : 'bg-red-500/20 border-red-500/50 text-red-300'
-              }`}
+                }`}
             >
               {message.text}
             </motion.div>

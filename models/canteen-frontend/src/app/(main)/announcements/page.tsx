@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { themeClasses, animations } from '@/lib/theme';
+import { API_URL } from '@/lib/config';
 
 interface Announcement {
   _id: string;
@@ -29,7 +30,7 @@ export default function AnnouncementsPage() {
   const { data: announcementsData, isLoading } = useQuery<{ success: boolean; announcements: Announcement[] }>({
     queryKey: ['all-announcements'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:5000/api/announcements');
+      const response = await fetch(`${API_URL}/announcements`);
       if (!response.ok) throw new Error('Failed to fetch announcements');
       return response.json();
     },
@@ -37,8 +38,8 @@ export default function AnnouncementsPage() {
 
   const announcements = announcementsData?.announcements || [];
 
-  const filteredAnnouncements = filterType === 'all' 
-    ? announcements 
+  const filteredAnnouncements = filterType === 'all'
+    ? announcements
     : announcements.filter(a => a.type === filterType);
 
   const getTypeIcon = (type: string) => {
@@ -84,11 +85,10 @@ export default function AnnouncementsPage() {
             <button
               key={type.key}
               onClick={() => setFilterType(type.key)}
-              className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                filterType === type.key
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${filterType === type.key
                   ? 'bg-gradient-to-r from-orange-600 to-amber-500 text-white'
                   : `${themeClasses.cardDark} ${themeClasses.textSecondary} hover:border-orange-500`
-              }`}
+                }`}
             >
               {type.icon} {type.label}
               {type.key !== 'all' && (
@@ -122,14 +122,14 @@ export default function AnnouncementsPage() {
             </Link>
           </div>
         ) : (
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={animations.containerVariants}
             initial="hidden"
             animate="visible"
           >
             {filteredAnnouncements.map((announcement) => (
-              <motion.div 
+              <motion.div
                 key={announcement._id}
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -140,11 +140,10 @@ export default function AnnouncementsPage() {
                   href={`/canteens/${announcement.canteen._id}`}
                   className="block group h-full"
                 >
-                  <div className={`${themeClasses.card} border-l-4 h-full overflow-hidden ${
-                    announcement.priority === 'high' ? 'border-l-red-500 shadow-lg shadow-red-500/20' :
-                    announcement.priority === 'medium' ? 'border-l-yellow-500 shadow-lg shadow-yellow-500/20' :
-                    'border-l-green-500 shadow-lg shadow-green-500/20'
-                  }`}>
+                  <div className={`${themeClasses.card} border-l-4 h-full overflow-hidden ${announcement.priority === 'high' ? 'border-l-red-500 shadow-lg shadow-red-500/20' :
+                      announcement.priority === 'medium' ? 'border-l-yellow-500 shadow-lg shadow-yellow-500/20' :
+                        'border-l-green-500 shadow-lg shadow-green-500/20'
+                    }`}>
                     {announcement.image && (
                       <div className="h-48 overflow-hidden">
                         <img
@@ -160,19 +159,18 @@ export default function AnnouncementsPage() {
                         <span className="text-sm font-medium text-indigo-600 capitalize">
                           {announcement.type.replace('_', ' ')}
                         </span>
-                        <span className={`ml-auto px-2 py-1 rounded text-xs font-semibold ${
-                          announcement.priority === 'high' ? 'bg-red-900/30 text-red-300' :
-                          announcement.priority === 'medium' ? 'bg-yellow-900/30 text-yellow-300' :
-                          'bg-green-900/30 text-green-300'
-                        }`}>
+                        <span className={`ml-auto px-2 py-1 rounded text-xs font-semibold ${announcement.priority === 'high' ? 'bg-red-900/30 text-red-300' :
+                            announcement.priority === 'medium' ? 'bg-yellow-900/30 text-yellow-300' :
+                              'bg-green-900/30 text-green-300'
+                          }`}>
                           {announcement.priority.toUpperCase()}
                         </span>
                       </div>
-                      
+
                       <h3 className={`text-lg font-bold ${themeClasses.textPrimary} mb-2 group-hover:text-blue-400 transition-colors`}>
                         {announcement.title}
                       </h3>
-                      
+
                       <p className={`text-sm ${themeClasses.textSecondary} mb-4 line-clamp-3`}>
                         {announcement.description}
                       </p>

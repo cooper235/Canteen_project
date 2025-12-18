@@ -3,6 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
+import { API_URL } from '@/lib/config';
 
 type Order = {
   _id: string;
@@ -45,16 +46,16 @@ export default function OrderDetailPage() {
   const { data, isLoading, error } = useQuery<{ success: boolean; order: Order }>({
     queryKey: ['order', orderId],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+      const response = await fetch(`${API_URL}/orders/${orderId}`, {
         headers: {
           'Authorization': `Bearer ${session?.user?.token}`,
         },
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch order');
       }
-      
+
       return response.json();
     },
     enabled: !!session,
@@ -78,7 +79,7 @@ export default function OrderDetailPage() {
     const created = new Date(createdAt);
     const diffMs = now.getTime() - created.getTime();
     const diffMins = Math.floor(diffMs / 60000);
-    
+
     if (diffMins < 1) return 'Just now';
     if (diffMins < 60) return `${diffMins} min ago`;
     const diffHours = Math.floor(diffMins / 60);
@@ -87,7 +88,7 @@ export default function OrderDetailPage() {
 
   const getEstimatedTime = (status: string, createdAt: string) => {
     if (status === 'completed' || status === 'cancelled') return null;
-    
+
     const created = new Date(createdAt);
     const estimatedMinutes = {
       pending: 5,
@@ -95,10 +96,10 @@ export default function OrderDetailPage() {
       preparing: 15,
       ready: 5,
     };
-    
+
     const minutes = estimatedMinutes[status as keyof typeof estimatedMinutes] || 10;
     const estimatedTime = new Date(created.getTime() + minutes * 60000);
-    
+
     return estimatedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
@@ -204,7 +205,7 @@ export default function OrderDetailPage() {
                 <div className="relative">
                   {/* Progress Line */}
                   <div className="absolute top-5 left-0 right-0 h-1 bg-slate-700 rounded">
-                    <div 
+                    <div
                       className="h-full bg-orange-500 transition-all duration-500 rounded"
                       style={{ width: `${currentStepIndex >= 0 ? (currentStepIndex / (statusSteps.length - 1)) * 100 : 0}%` }}
                     ></div>
@@ -215,21 +216,19 @@ export default function OrderDetailPage() {
                     {statusSteps.map((step, index) => {
                       const isCompleted = index <= currentStepIndex;
                       const isCurrent = index === currentStepIndex;
-                      
+
                       return (
                         <div key={step.key} className="flex flex-col items-center z-10">
                           <div
-                            className={`w-10 h-10 rounded-full flex items-center justify-center text-xl border-2 transition-all ${
-                              isCompleted
+                            className={`w-10 h-10 rounded-full flex items-center justify-center text-xl border-2 transition-all ${isCompleted
                                 ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/50'
                                 : 'bg-slate-700 border-slate-600 text-gray-500'
-                            } ${isCurrent ? 'ring-4 ring-orange-500/30 scale-110' : ''}`}
+                              } ${isCurrent ? 'ring-4 ring-orange-500/30 scale-110' : ''}`}
                           >
                             {step.icon}
                           </div>
-                          <p className={`mt-2 text-xs font-medium text-center max-w-[80px] ${
-                            isCompleted ? 'text-white' : 'text-gray-500'
-                          }`}>
+                          <p className={`mt-2 text-xs font-medium text-center max-w-[80px] ${isCompleted ? 'text-white' : 'text-gray-500'
+                            }`}>
                             {step.label}
                           </p>
                         </div>
