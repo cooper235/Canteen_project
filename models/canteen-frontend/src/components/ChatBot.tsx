@@ -42,7 +42,7 @@ export default function ChatBot() {
             {/* Floating Chat Button */}
             <motion.button
                 onClick={() => setIsOpen(!isOpen)}
-                className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full p-4 shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 hover:scale-105"
+                className="fixed bottom-6 left-6 z-50 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full p-4 shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 hover:scale-105"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
@@ -63,7 +63,7 @@ export default function ChatBot() {
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="fixed bottom-24 right-6 z-50 w-[380px] h-[600px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 dark:border-gray-800"
+                        className="fixed bottom-24 left-6 z-50 w-[380px] h-[600px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 dark:border-gray-800"
                     >
                         {/* Header */}
                         <div className="bg-gradient-to-r from-amber-600 to-orange-600 p-4 text-white">
@@ -126,8 +126,8 @@ export default function ChatBot() {
                                 >
                                     <div
                                         className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.role === 'user'
-                                                ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white'
-                                                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-md'
+                                            ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white'
+                                            : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-md'
                                             }`}
                                     >
                                         <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
