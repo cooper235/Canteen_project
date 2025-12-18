@@ -12,8 +12,10 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           console.log('🔐 [NextAuth] Attempting login for:', credentials?.email);
-          
-          const response = await fetch('http://localhost:5000/api/auth/login', {
+
+          // Use environment variable for API URL, fallback to localhost for development
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+          const response = await fetch(`${apiUrl}/auth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -33,12 +35,12 @@ export const authOptions: NextAuthOptions = {
           }
 
           const data = await response.json();
-          console.log('✅ [NextAuth] Login successful:', { 
-            userId: data.user?.id || data.user?._id, 
+          console.log('✅ [NextAuth] Login successful:', {
+            userId: data.user?.id || data.user?._id,
             role: data.user?.role,
-            hasToken: !!data.token 
+            hasToken: !!data.token
           });
-          
+
           const user = data.user;
 
           return {
