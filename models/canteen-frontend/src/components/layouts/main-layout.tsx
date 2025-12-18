@@ -3,6 +3,7 @@
 import { PropsWithChildren } from 'react';
 import Navbar from './navbar-new';
 import { FloatingCartButton } from '../FloatingCartButton';
+import ChatBot from '../ChatBot';
 
 export function MainLayout({ children }: PropsWithChildren) {
   return (
@@ -12,6 +13,7 @@ export function MainLayout({ children }: PropsWithChildren) {
         {children}
       </main>
       <FloatingCartButton />
+      <ChatBot />
     </div>
   );
 }

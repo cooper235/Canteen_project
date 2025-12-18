@@ -16,6 +16,7 @@ import reviewRoutes from "./routes/reviewRoutes.js"
 import announcementRoutes from "./routes/announcementRoutes.js"
 import analyticsRoutes from "./routes/analyticsRoutes.js"
 import mlRoutes from "./routes/mlRoutes.js"
+import chatbotRoutes from "./routes/chatbotRoutes.js"
 import { authLimiter, apiLimiter, orderLimiter } from "./middleware/rateLimiter.js"
 
 dotenv.config()
@@ -55,7 +56,7 @@ import { connectDatabase } from "./config/database.js"
 const connectWithRetry = async () => {
   const maxRetries = 5;
   let retries = 0;
-  
+
   while (retries < maxRetries) {
     try {
       await connectDatabase();
@@ -89,6 +90,7 @@ app.use("/api/reviews", reviewRoutes)
 app.use("/api/announcements", announcementRoutes)
 app.use("/api/analytics", analyticsRoutes)
 app.use("/api/ml", mlRoutes)
+app.use("/api/chatbot", chatbotRoutes)
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
